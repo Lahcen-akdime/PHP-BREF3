@@ -419,7 +419,8 @@
                     <div class="module-icon">👥</div>
                     Gestion du Roster (Joueurs & Coachs)
                 </div>
-                <button class="btn-new">+ Ajouter Membre</button>
+                <a href="formulaireDajoute.php/joueurForm.php"><button class="btn-new">+ Ajouter un joueur</button></a>
+                <a href="formulaireDajoute.php/coachForm.php"><button class="btn-new">+ Ajouter un coach</button></a>
             </div>
 
             <div class="stats-grid">
@@ -540,7 +541,7 @@
                     <div class="module-icon">🏢</div>
                     Management des Équipes
                 </div>
-                <button class="btn-new">+ Créer Équipe</button>
+                <a href="formulaireDajoute.php/equipeForm.php"><button class="btn-new">+ Créer Équipe</button></a>
             </div>
 
             <div class="stats-grid">
