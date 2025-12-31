@@ -1,4 +1,13 @@
 <?php
+require_once "../equipe.php" ;
+require_once "../config.php" ;
+if($_SERVER['REQUEST_METHOD']=="POST"){
+    $name = $_POST['name'];
+    $manager_name = $_POST['manager'];
+    $budget = $_POST['budget'];
+    $teamClass = new equipe($connection) ;
+    $teamClass -> create($name,$manager_name,$budget);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -180,7 +189,7 @@
             Team added successfully!
         </div>
 
-        <form id="teamForm">
+        <form id="teamForm" action="equipeForm.php" method="POST">
             <div class="form-title">Basic Information</div>
 
             <div class="form-group">
@@ -189,17 +198,17 @@
                 <div class="error-message">Team name is required</div>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="email">Email *</label>
                 <input type="email" id="email" name="email" placeholder="Enter team email" required>
                 <div class="error-message">Please enter a valid email</div>
-            </div>
+            </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="city">City *</label>
                 <input type="text" id="city" name="city" placeholder="Enter team city" required>
                 <div class="error-message">City is required</div>
-            </div>
+            </div> -->
 
             <div class="form-title">Team Details</div>
 
@@ -215,11 +224,11 @@
                 <div class="error-message">Manager name is required</div>
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="founded">Year Founded *</label>
                 <input type="number" id="founded" name="founded" placeholder="Enter year founded" min="1900" max="2099" required>
                 <div class="error-message">Year founded is required</div>
-            </div>
+            </div> -->
 
             <div class="button-group">
                 <button type="submit" class="btn-submit">Add Team</button>
@@ -229,81 +238,6 @@
     </div>
 
     <script>
-        const form = document.getElementById('teamForm');
-        const successMessage = document.getElementById('successMessage');
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Reset error states
-            document.querySelectorAll('.form-group').forEach(group => {
-                group.classList.remove('error');
-            });
-
-            // Validate fields
-            let isValid = true;
-
-            const name = document.getElementById('name').value.trim();
-            if (!name) {
-                showError('name', 'Team name is required');
-                isValid = false;
-            }
-
-            const email = document.getElementById('email').value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email || !emailRegex.test(email)) {
-                showError('email', 'Please enter a valid email');
-                isValid = false;
-            }
-
-            const city = document.getElementById('city').value.trim();
-            if (!city) {
-                showError('city', 'City is required');
-                isValid = false;
-            }
-
-            const budget = document.getElementById('budget').value.trim();
-            if (!budget || isNaN(budget) || parseInt(budget) <= 0) {
-                showError('budget', 'Budget must be a valid positive number');
-                isValid = false;
-            }
-
-            const manager = document.getElementById('manager').value.trim();
-            if (!manager) {
-                showError('manager', 'Manager name is required');
-                isValid = false;
-            }
-
-            const founded = document.getElementById('founded').value.trim();
-            if (!founded || isNaN(founded)) {
-                showError('founded', 'Year founded is required');
-                isValid = false;
-            }
-
-            if (isValid) {
-                // Prepare data for submission
-                const formData = {
-                    name: name,
-                    email: email,
-                    city: city,
-                    budget: parseInt(budget),
-                    manager: manager,
-                    founded: parseInt(founded)
-                };
-
-                console.log('Team Data Ready to Submit:', formData);
-                
-                // Show success message
-                successMessage.classList.add('show');
-                form.reset();
-
-                // Hide success message after 3 seconds
-                setTimeout(() => {
-                    successMessage.classList.remove('show');
-                }, 3000);
-            }
-        });
-
         function showError(fieldId, message) {
             const field = document.getElementById(fieldId);
             const group = field.parentElement;
