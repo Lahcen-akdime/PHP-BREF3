@@ -1,3 +1,10 @@
+<?php
+require_once "config.php";
+require_once "equipe.php";
+$teamClass = new equipe($connection);
+$GLOBALS['teams'] = $teamClass -> affichage() ;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -569,77 +576,29 @@
                             <th>Team Name</th>
                             <th>Manager</th>
                             <th>Budget</th>
-                            <th>Members</th>
+                            <!-- <th>Members</th> -->
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Elite Warriors</td>
-                            <td>Sarah Williams</td>
-                            <td>$2,100,000</td>
-                            <td>12</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Phoenix Rising</td>
-                            <td>James Patterson</td>
-                            <td>$1,950,000</td>
-                            <td>10</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Dragon's Pride</td>
-                            <td>Michael Chen</td>
-                            <td>$2,050,000</td>
-                            <td>11</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Thunder Force</td>
-                            <td>Lisa Anderson</td>
-                            <td>$2,000,000</td>
-                            <td>9</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Inferno Squad</td>
-                            <td>Alex Martinez</td>
-                            <td>$2,200,000</td>
-                            <td>13</td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php 
+                        foreach ($GLOBALS['teams'] as $key ) {
+                            echo "<tr>
+                                <td>$key[name]</td>
+                                <td>$key[manager_name]</td>
+                                <td>$key[budget]</td>
+                                <td><span class='status-badge status-active'>Active</span></td>
+                                <td>
+                                    <div class='action-buttons'>
+                                        <button class='btn-action'>Edit</button>
+                                        <button class='btn-action btn-delete'>Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
                 <div class="pagination">

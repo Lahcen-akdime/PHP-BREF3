@@ -1,12 +1,12 @@
 <?php
 require_once "../equipe.php" ;
 require_once "../config.php" ;
+$teamClass = new equipe($connection) ;
 if($_SERVER['REQUEST_METHOD']=="POST"){
     $name = $_POST['name'];
     $manager_name = $_POST['manager'];
     $budget = $_POST['budget'];
-    $teamClass = new equipe($connection) ;
-    $teamClass -> create($name,$manager_name,$budget);
+    $teamClass -> create($name,$manager_name,$budget,$connection);
 }
 ?>
 <!DOCTYPE html>

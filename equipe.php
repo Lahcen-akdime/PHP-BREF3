@@ -1,10 +1,23 @@
 <?php
 require_once "interface.php";
-class equipe implements crud {
-    public function __construct(public $connection){}
-    public function create($name,$managername,$budget){
-        $operation = $this -> connection -> prepare("INSERT INTO equipe(name,manager_name,budget)
+require_once "Trait/trait.php";
+/**
+*   @method read(): void
+*/
+class equipe {
+    public $connection ;
+    public function __construct($connection)
+    {
+        $this -> connection = $connection ;
+    }
+    use crud ;
+    public function create($name,$managername,$budget,$connection){
+        $operation = $connection -> prepare("INSERT INTO equipe(name,manager_name,budget)
         VALUES(:name,:manager_name,:budget)");
         $operation -> execute(array(':name'=>$name,':manager_name'=>$managername,':budget'=>$budget));
     }
+    public function affichage(){
+        return $this -> read("equipe",$this -> connection);
+    }
 }
+
