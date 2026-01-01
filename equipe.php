@@ -5,6 +5,7 @@ require_once "config.php";
 /**
  *   @method read(): void
  */
+
 class equipe
 {
     public $connection;

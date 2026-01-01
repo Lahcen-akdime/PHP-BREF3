@@ -7,4 +7,8 @@ trait crud {
     }
      public function update($a , $c){
      }
+     public function delete($teadmId,$tableName,$connection){
+        $connection -> query("DELETE FROM $tableName WHERE id = $teadmId");
+        header("location:admindashboard.php");
+     }
 }

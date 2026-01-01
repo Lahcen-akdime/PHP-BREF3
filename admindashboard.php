@@ -467,7 +467,7 @@ require_once "equipe.php";
                             <td>
                                 <div class="action-buttons">
                                     <button class="btn-action">Edit</button>
-                                    <button class="btn-action btn-delete">Delete</button>
+                                    <a href=""></a><button class="btn-action btn-delete">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -589,7 +589,7 @@ require_once "equipe.php";
                                 <td>
                                     <div class='action-buttons'>
                                         <button class='btn-action'>Edit</button>
-                                        <button class='btn-action btn-delete'>Delete</button>
+                                        <a href='teamdelete.php?id=$key[id]'><button class='btn-action btn-delete'>Delete</button>
                                     </div>
                                 </td>
                             </tr>

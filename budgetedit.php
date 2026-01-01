@@ -4,9 +4,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
  $newbudget = $_POST['newBudget'];
  $teamid = $_POST['teamID'];
  $teamClass -> updatebudget($newbudget,$teamid);
- echo '<script type="text/javascript">
-           window.location = "http://localhost/apEX/admindashboard.php";
-      </script>';
+         header("Location:admindashboard.php");
 }
 else {
 $teamid = $_GET['id'];
