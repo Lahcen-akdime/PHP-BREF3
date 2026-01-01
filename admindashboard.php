@@ -1,9 +1,6 @@
 <?php
 require_once "config.php";
 require_once "equipe.php";
-$teamClass = new equipe($connection);
-$GLOBALS['teams'] = $teamClass -> affichage() ;
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -587,7 +584,7 @@ $GLOBALS['teams'] = $teamClass -> affichage() ;
                             echo "<tr>
                                 <td>$key[name]</td>
                                 <td>$key[manager_name]</td>
-                                <td>$key[budget]</td>
+                                <td>$key[budget] <a href='budgetedit.php?id=$key[id]'><button class='btn-action'>Modifier</button></a></td>
                                 <td><span class='status-badge status-active'>Active</span></td>
                                 <td>
                                     <div class='action-buttons'>
