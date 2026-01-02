@@ -28,6 +28,8 @@ class equipe
     {
         $operation = $this->connection->query("Update equipe SET budget = $newbudget WHERE id = $eqipeID");
     }
+        use search ;
+        
 }
 $teamClass = new equipe($connection);
 $GLOBALS['teams'] = $teamClass->affichage();

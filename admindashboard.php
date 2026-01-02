@@ -743,7 +743,8 @@ require_once "equipe.php";
                     <div class="module-icon">💰</div>
                     Exécution des Transactions
                 </div>
-                <button class="btn-new">+ Déclencher Transfert</button>
+                <a href="./formulaireDajoute.php/transfertPlayerForm.php"><button class="btn-new">+ Déclencher a player Transfert</button></a>
+                <a href="./formulaireDajoute.php/transfertCoachForm.php"><button class="btn-new">+ Déclencher a coach Transfert</button></a>
             </div>
 
             <div class="stats-grid">
@@ -772,7 +773,7 @@ require_once "equipe.php";
                             <th>Player</th>
                             <th>From Team</th>
                             <th>To Team</th>
-                            <th>Amount</th>
+                            <th>Price Total</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>

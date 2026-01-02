@@ -1,19 +1,28 @@
 <?php
 include_once "contrat.php";
+include_once "person.php";
+require_once "FinancialEngine.php";
 class joueur extends Person {
     private static $P_signature = 5000;
-    public function __construct(protected string $name,
-                                protected string $email,protected string $nationality,
-                                protected string $role,protected int $ValeurMarcher ,
-                                protected int $contratid )
-                                {}
+    private string $role ; 
+    private int $ValeurMarcher ;
+    private int $contratid ;
+    private $Joueur ;
+    private $EquipeA ;
+    private $EquipeB ;
     public function getAnnualCost(){
     //    return (() * 12) + self::$P_signature ;
     }
+    use search ;
+    public function transfert($Joueur,$EquipeA,$EquipeB,$connection){
+        $this -> Joueur = $Joueur;
+        $this -> EquipeA = $EquipeA;
+        $this -> EquipeB = $EquipeB;
+        $opperation = $connection -> exec("SELECT budget FROM equipe WHERE id = $EquipeB");
+        $array = $opperation -> fetchAll(PDO::FETCH_ASSOC);
+        $budget = $array[0];
+        return $budget ;
+    }
 }
-
-
-
+$joueurClass = new joueur();
 // $contrat = {}
-//  Le Joueur coûte : (Salaire mensuel * 12) + Prime de signature.
-// - Le Coach coûte : (Salaire mensuel * 12) + Frais de déplacement.

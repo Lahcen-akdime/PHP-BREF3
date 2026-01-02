@@ -12,3 +12,16 @@ trait crud {
         header("location:admindashboard.php");
      }
 }
+trait search {
+    public function search($tableName,$id,$connection){
+        $resault = $connection -> exec("SELECT 1 FROM $tableName WHERE id = $id");
+        if($resault){
+             $all = $resault -> fetchAll(PDO::FETCH_ASSOC);
+             return $all[0];
+        }
+        else{
+            return false ;
+        }
+
+    }
+}
