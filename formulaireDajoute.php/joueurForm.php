@@ -1,4 +1,16 @@
 <?php
+require_once "../joueur.php";
+require_once "../config.php";
+$joueurClass = new joueur();
+if($_SERVER['REQUEST_METHOD']=="POST"){
+    $name = $_POST['name'];
+    $role = $_POST['role'];
+    $email = $_POST['email'];
+    $nationalite = $_POST['nationalite'];
+    $valeur_m = $_POST['valeur_m'];
+    $equipe_id = $_POST['equipe_id'];
+    $joueurClass -> create($name,$role,$email,$nationalite,$valeur_m,$equipe_id,$connection);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -182,7 +194,7 @@
                 Les champs marqués d'un * sont obligatoires. Tous les ID doivent être des nombres positifs.
             </div>
 
-            <form id="playerForm">
+            <form id="playerForm" method="POST" action="joueurForm.php">
                 <div class="form-group">
                     <label for="name">Nom du Joueur *</label>
                     <input type="text" id="name" name="name" placeholder="Ex: Kylian Mbappé" required>
@@ -219,14 +231,7 @@
 
                 <div class="form-group">
                     <label for="equipe_id">ID de l'Équipe *</label>
-                    <select id="equipe_id" name="equipe_id" required>
-                        <option value="">-- Sélectionner une équipe --</option>
-                        <option value="1">Équipe 1</option>
-                        <option value="2">Équipe 2</option>
-                        <option value="3">Équipe 3</option>
-                        <option value="4">Équipe 4</option>
-                        <option value="5">Équipe 5</option>
-                    </select>
+                    <input type="number" id="equipe_id" name="equipe_id" required>
                     <div class="error" id="equipe_idError"></div>
                 </div>
 
@@ -238,89 +243,6 @@
         </div>
     </div>
 
-    <script>
-        const form = document.getElementById('playerForm');
-        const successMsg = document.getElementById('successMsg');
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Clear previous errors
-            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
-            successMsg.style.display = 'none';
-
-            // Validate form
-            let isValid = true;
-            const formData = new FormData(form);
-
-            // Validation rules
-            const name = formData.get('name').trim();
-            if (name.length < 2) {
-                showError('nameError', 'Le nom doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const role = formData.get('role').trim();
-            if (role.length < 2) {
-                showError('roleError', 'Le rôle doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const email = formData.get('email').trim();
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showError('emailError', 'Email invalide');
-                isValid = false;
-            }
-
-            const nationalite = formData.get('nationalite').trim();
-            if (nationalite.length < 2) {
-                showError('nationaliteError', 'La nationalité doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const valeur_m = formData.get('valeur_m');
-            if (isNaN(valeur_m) || valeur_m < 0) {
-                showError('valeur_mError', 'La valeur marchande doit être un nombre positif');
-                isValid = false;
-            }
-
-            const equipe_id = formData.get('equipe_id');
-            if (!equipe_id) {
-                showError('equipe_idError', 'Sélectionnez une équipe');
-                isValid = false;
-            }
-
-            if (isValid) {
-                // Prepare data for database insert
-                const playerData = {
-                    name: name,
-                    role: role,
-                    email: email,
-                    nationalite: nationalite,
-                    valeur_m: parseInt(valeur_m),
-                    equipe_id: parseInt(equipe_id)
-                };
-
-                console.log('[v0] Données du joueur prêtes pour insertion:', playerData);
-
-                // Show success message
-                successMsg.style.display = 'block';
-                form.reset();
-
-                // Here you would normally send the data to your backend
-                // fetch('/api/players/add', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(playerData)
-                // })
-            }
-        });
-
-        function showError(elementId, message) {
-            const errorEl = document.getElementById(elementId);
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
-    </script>
+    
 </body>
 </html>

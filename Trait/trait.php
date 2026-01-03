@@ -1,8 +1,7 @@
 <?php
 trait crud {
     public function read($name,$connection){
-        $operation = $connection -> prepare("SELECT * FROM $name");
-        $operation -> execute();
+        $operation = $connection -> query("SELECT * FROM $name");
          return $operation -> fetchAll(PDO::FETCH_ASSOC);
     }
      public function update($a , $c){
@@ -14,10 +13,12 @@ trait crud {
 }
 trait search {
     public function search($tableName,$id,$connection){
-        $resault = $connection -> exec("SELECT 1 FROM $tableName WHERE id = $id");
-        if($resault){
-             $all = $resault -> fetchAll(PDO::FETCH_ASSOC);
-             return $all[0];
+        $resault = $connection -> prepare("SELECT id FROM $tableName WHERE id = :id");
+        $isex=$resault->execute([':id'=>$id]);
+        $data = $resault -> fetchAll(PDO::FETCH_NUM);
+        if($data){
+            //  $all = $resault -> fetchAll(PDO::FETCH_ASSOC);
+             return $data[0];
         }
         else{
             return false ;

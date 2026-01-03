@@ -1,7 +1,7 @@
 <?php
 final class FinancialEngine {
     private float $commision ;
-    private int $Solvabilite ;
+    private float $Solvabilite ;
     static private float $transfertTaxe = 0.05 ;
     private float $total ;
     public function  checkSolvabilité($budget,$transfertMontant){

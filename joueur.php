@@ -2,26 +2,60 @@
 include_once "contrat.php";
 include_once "person.php";
 require_once "FinancialEngine.php";
-class joueur extends Person {
+require_once "Trait/trait.php";
+class joueur extends Person
+{
     private static $P_signature = 5000;
-    private string $role ; 
-    private int $ValeurMarcher ;
-    private int $contratid ;
-    private $Joueur ;
-    private $EquipeA ;
-    private $EquipeB ;
-    public function getAnnualCost(){
-    //    return (() * 12) + self::$P_signature ;
+    private string $role;
+    private int $ValeurMarcher;
+    private int $contratid;
+    private $Joueur;
+    private $EquipeA;
+    private $EquipeB;
+    public function getAnnualCost()
+    {
+        //    return (() * 12) + self::$P_signature ;
     }
-    use search ;
-    public function transfert($Joueur,$EquipeA,$EquipeB,$connection){
-        $this -> Joueur = $Joueur;
-        $this -> EquipeA = $EquipeA;
-        $this -> EquipeB = $EquipeB;
-        $opperation = $connection -> exec("SELECT budget FROM equipe WHERE id = $EquipeB");
-        $array = $opperation -> fetchAll(PDO::FETCH_ASSOC);
-        $budget = $array[0];
-        return $budget ;
+    public function create($name, $role, $email, $nationalite, $valeur_m, $equipe_id, $connection)
+    {
+        try {
+            $connection -> beginTransaction();
+            $opperation = $connection->prepare("INSERT INTO joueur (name,role,email,nationalite,valeur_m,equipe_id)
+                                      VALUES (:name,:role,:email,:nationalite,:valeur_m,:equipe_id)");
+            $opperation -> execute(array(
+                ":name" => $name,
+                ":role" => $role,
+                ":email" => $email,
+                ":nationalite" => $nationalite,
+                ':valeur_m'=> $valeur_m,
+                ':equipe_id' => intval($equipe_id)
+            ));
+            $selectid = $connection -> query("SELECT id FROM joueur WHERE name = '$name' AND email = '$email'") ;  
+            $id = $selectid -> fetchAll(PDO::FETCH_ASSOC) ;
+            $opperation = $connection->prepare("INSERT INTO contrat (joueur_id,equipe_id,montant)
+                                      VALUES (:joueur_id,:equipe_id,:montant)");
+            $opperation -> execute(array(
+                ':joueur_id' => $id[0]['id'],
+                ':equipe_id' => intval($equipe_id),
+                ':montant' => 10
+            ));
+            $connection -> commit();
+        } catch (PDOException $e) {
+            echo "error : ". $e -> getMessage() ;
+            $connection -> rollback();
+        }
+    }
+    use search;
+    public function transfert($Joueur, $EquipeA, $EquipeB, $connection)
+    {
+        $this->Joueur = $Joueur;
+        $this->EquipeA = $EquipeA;
+        $this->EquipeB = $EquipeB;
+        $opperation = $connection->prepare("SELECT budget FROM equipe WHERE id = :EquipeB");
+        $opperation -> execute([":EquipeB"=>$EquipeB]);
+        $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
+        // $budget = $budget[0]['budget'];
+        return $budget[0]['budget'];
     }
 }
 $joueurClass = new joueur();

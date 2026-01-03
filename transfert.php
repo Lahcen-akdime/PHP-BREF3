@@ -1,47 +1,51 @@
 <?php
 class transfert
 {
-    private $joueur_id;
-    private $equipe_a;
-    private $equipe_b;
-    private $state;
-    private $connection;
+    private int  $joueur_id;
+    private int $equipe_a;
+    private int  $equipe_b;
+    private string $state;
+    private PDO $connection;
     public function Playerinsertion($joueur_id, $equipe_a, $equipe_b, $state, $connection)
     {
-        $this->joueur_id;
-        $this->equipe_a;
-        $this->equipe_b;
-        $this->state;
-        $this->connection;
+        $this->joueur_id = $joueur_id;
+        $this->equipe_a = $equipe_a;
+        $this->equipe_b = $equipe_b;
+        $this->state = $state;
+        $this->connection = $connection;
         $operation = $connection->prepare("INSERT INTO transfert(joueur_id,equipe_a,equipe_b,state)
         VALUES(:joueur_id,:equipe_a,:equipe_b,:state)");
         $operation->execute(array(
-            ':joueur_id' => $joueur_id,
-            ':equipe_a' => $equipe_a,
-            ':equipe_b' => $equipe_b,
-            ':state' => $state
+            ':joueur_id' => $this->joueur_id,
+            ':equipe_a' =>  $this->equipe_a,
+            ':equipe_b' =>  $this->equipe_b,
+            ':state' =>  $this->state
         ));
     }
     public function Alloperation($budget, $resault)
     {
+
         try {
-            $this->connection->beginTransaction(PDO::ATTR_ERRMODE);
-            $operation = $this->connection->query("Update joueur SET equipe_id =$this -> equipe_b
-                                                    WHERE id = $this -> joueur_id");
+            $this->connection->beginTransaction();
+            $operation = $this->connection->prepare("Update joueur SET equipe_id = :equipe_b
+                                                    WHERE id = :id")->execute([':equipe_b' => $this->equipe_b, ':id' => $this->joueur_id]);
             $newBudget = $budget - $resault;
-            $operation = $this->connection->query("Update equipe SET budget = $newBudget
-                                                   WHERE id = $this -> equipe_b");
-            $operation = $this->connection->prepare("INSERT INTO contrat(:joueur_id,:equipe_id,:montant)
-             VALUES(:joueur_id,:equipe_a,:equipe_b,:state)");
+            $operation = $this->connection->prepare("Update equipe SET budget = $newBudget
+                                                   WHERE id = :id");
+            $operation->execute(['id' => $this->equipe_b]);
+            $operation = $this->connection->prepare("INSERT INTO contrat(joueur_id,equipe_id,montant)
+             VALUES(:joueur_id,:equipe_id,:montant)");
             $operation->execute(array(
                 ':joueur_id' => $this->joueur_id,
-                ':equipe_id' => $this->equipe_a,
-                ':montant' => $resault
+                ':equipe_id' => $this->equipe_b,
+
+                ':montant' => $resault,
+
             ));
             $this->connection->commit();
-        } catch (Exception $e) {
-            $this -> connection -> rollback();
-            echo "Error : ". $e -> getMessage();
+        } catch (PDOException $e) {
+            echo "Error : " . $e->getMessage();
+            $this->connection->rollback();
         }
     }
 }

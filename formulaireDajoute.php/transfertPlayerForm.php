@@ -9,16 +9,17 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $checkEquipeA = $teamClass -> search("equipe",$_POST['equipe_a'],$connection);
     $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
     if($checkJoueur && $checkEquipeA && $checkEquipeB){
-        $budget = $joueurClass -> transfert($checkJoueur , $checkEquipeA , $checkEquipeB,$connection);
+        $budget = $joueurClass -> transfert($checkJoueur[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
         $resault = $finalClass -> checkSolvabilité($budget,$_POST['montant']);
         if($resault == false){
             $state = "pendeng";
+            $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
         }
         else{
             $state = "Completed";
+            $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
             $transfertClass -> Alloperation($budget,$resault);
         }
-        $transfertClass -> Playerinsertion($joueur_id,$equipe_a,$equipe_b,$state,$connection);
     }
 }
 ?>
@@ -182,7 +183,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             Transfer added successfully !
         </div>
 
-        <form id="transferForm" method="POST" action="transfertForm.php">
+        <form id="transferForm" method="POST">
             <div class="form-group">
                 <label for="joueur_id ">Player id *</label>
                 <input type="text" id ="joueur_id" name="joueur_id" placeholder="Enter player id " required>
