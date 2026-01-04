@@ -14,7 +14,7 @@ trait crud {
 trait search {
     public function search($tableName,$id,$connection){
         $resault = $connection -> prepare("SELECT id FROM $tableName WHERE id = :id");
-        $isex=$resault->execute([':id'=>$id]);
+        $resault->execute([':id'=>$id]);
         $data = $resault -> fetchAll(PDO::FETCH_NUM);
         if($data){
             //  $all = $resault -> fetchAll(PDO::FETCH_ASSOC);

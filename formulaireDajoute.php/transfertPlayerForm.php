@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
     if($checkJoueur && $checkEquipeA && $checkEquipeB){
         $budget = $joueurClass -> gitbudget($checkJoueur[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
-        $resault = $finalClass -> checkSolvabilité($budget,$_POST['montant']);
+        $resault = $finalClass -> checkSolvabilité($budget,$coachClass -> getAnnualCost($checkCoach[0],$connection));
         if($resault == false){
             $state = "pendeng";
             $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
@@ -203,11 +203,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
                     <input type="number" id="equipe_b" name="equipe_b" placeholder="Enter team ID" required>
                     <div class="error" id="equipe_b-error">Please enter destination team ID</div>
                 </div>
-            </div>
-             <div class="form-group">
-                <label for="montant ">Transfert montant *</label>
-                <input type="number" id ="montant" name="montant" placeholder="Enter the price " required>
-                <div class="error" id="montant_id-error">Please enter a valid player name</div>
             </div>
 
 

@@ -7,6 +7,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $manager_name = $_POST['manager'];
     $budget = $_POST['budget'];
     $teamClass -> create($name,$manager_name,$budget,$connection);
+    header("location:../admindashboard.php");
 }
 ?>
 <!DOCTYPE html>

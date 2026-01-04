@@ -7,8 +7,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $nationalite = $_POST['nationalite'];
     $style_c = $_POST['style_c'];
     $annes_ex = $_POST['annes_ex'];
+    $salary = $_POST['salary'];
     $equipe_id = $_POST['equipe_id'];
-    $coachClass -> create($name,$email,$nationalite,$style_c,$annes_ex,$equipe_id,$connection);
+    $coachClass -> create($name,$email,$nationalite,$style_c,$annes_ex,$salary,$equipe_id,$connection);
     header("location:../admindashboard.php");
 }
 ?>
@@ -226,6 +227,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
                         <label for="annes_ex">Années d'Expérience *</label>
                         <input type="number" id="annes_ex" name="annes_ex" placeholder="Ex: 25" min="0" required>
                         <div class="error" id="annes_exError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="salary">Salary *</label>
+                        <input type="number" id="salary" name="salary" placeholder="Ex: 25" min="0" required>
+                        <div class="error" id="salaryError"></div>
                     </div>
                 </div>
 

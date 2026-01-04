@@ -1,14 +1,20 @@
 <?php
 class checkuser{
     public function checkSelect($user){
-       if($user == "admin"){
-        header("location: admindashboard.php");
+        if($user == "admin"){
+            session_start();
+            $_SESSION['user']="admin";
+            header("location: admindashboard.php");
        }
         elseif($user == "journaliste"){
+            session_start();
+        $_SESSION['user']="journaliste";
         header("location: journalistedashboard.php");
        }
        elseif($user == "visitor"){
-        header("location: visitor.php");
+            session_start();
+        $_SESSION['user']="visitor";
+        header("location: visitorDashboard.php");
        }
 
     }

@@ -10,6 +10,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $valeur_m = $_POST['valeur_m'];
     $equipe_id = $_POST['equipe_id'];
     $joueurClass -> create($name,$role,$email,$nationalite,$valeur_m,$equipe_id,$connection);
+    header("location:../admindashboard.php") ;
 }
 ?>
 <!DOCTYPE html>

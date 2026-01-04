@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
     if($checkCoach && $checkEquipeA && $checkEquipeB){
         $budget = $coachClass -> gitbudget($checkCoach[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
-        $resault = $finalClass -> checkSolvabilité($budget,10);
+        $resault = $finalClass -> checkSolvabilité($budget,$coachClass -> getAnnualCost($checkCoach[0],$connection));
         if($resault == false){
             $state = "pendeng";
             $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
@@ -21,10 +21,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
             $transfertClass -> FinalCoachOperation($budget,$resault);
         }
-        echo $budget ;
-        echo $resault ;
-        // header("location:../admindashboard.php");
+        header("location:../admindashboard.php");
     }
+}
+else{
+    echo "<script>alert(Pardon !! , une id undifined !!!!!!!)</script>";
 }
 ?>
 <!DOCTYPE html>

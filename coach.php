@@ -4,31 +4,39 @@ require_once "Trait/trait.php";
 class coach extends Person {
     private string $style_coach ;
     private string $annee_experience ;
-    public int $P_deplacement = 3000;
+    static private int $P_deplacement = 30;
+    private int $salary ;
     private PDO $connection ;
     public $EquipeA ;
     public $EquipeB ;
     private $userId ;
-    public function getAnnualCost(){
-    // return $this -> salaire * 12 + $this -> P_deplacement  ;
+    public function getAnnualCost($Userid,$connection){
+    $resault = $connection -> prepare("SELECT salary FROM coach WHERE id = :id");
+        $resault->execute([':id'=>$Userid]);
+        $data = $resault -> fetchAll(PDO::FETCH_NUM);
+        $salary = $data[0][0] ;
+    return ($salary * 12) + SELF::$P_deplacement  ;
     }
+    use crud;
     use search;
-    public function create($name,$email,$nationalite,$style_c,$annes_ex,$equipe_id,$connection){
+    public function create($name,$email,$nationalite,$style_c,$annes_ex,$salary,$equipe_id,$connection){
         $this -> name = $name ;
         $this -> email = $email ;
         $this -> style_coach = $style_c ;
         $this -> annee_experience = $annes_ex ;
+        $this -> nationalite = $nationalite ;
         $this -> connection = $connection;
          try {
             $connection -> beginTransaction();
-            $opperation = $connection->prepare("INSERT INTO coach (name,email,nationalite,style_c,annes_ex,equipe_id)
-                                      VALUES (:name,:email,:nationalite,:style_c,:annes_ex,:equipe_id)");
+            $opperation = $connection->prepare("INSERT INTO coach (name,email,nationalite,style_c,annes_ex,salary,equipe_id)
+                                      VALUES (:name,:email,:nationalite,:style_c,:annes_ex,:salary,:equipe_id)");
             $opperation -> execute(array(
                 ":name" => $this -> name,
                 ":email" => $this -> email,
-                ":nationalite" => $nationalite,
+                ":nationalite" => $this -> nationalite,
                 ":style_c" =>$this -> style_coach,
                 ':annes_ex'=>  intval($this -> annee_experience),
+                ':salary' => intval($salary),
                 ':equipe_id' => intval($equipe_id)
             ));
             $selectid = $connection -> query("SELECT id FROM coach WHERE name = '$name' AND email = '$email'") ;  

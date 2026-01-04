@@ -5,19 +5,25 @@ require_once "FinancialEngine.php";
 require_once "Trait/trait.php";
 class joueur extends Person
 {
-    private static $P_signature = 5000;
+    private static $P_signature = 5;
     private string $role;
     private int $ValeurMarcher;
     private int $contratid;
     private $Joueur;
     private $EquipeA;
     private $EquipeB;
-    public function getAnnualCost()
+    use crud;
+    public function getAnnualCost($Userid,$connection)
     {
-        //    return (() * 12) + self::$P_signature ;
+        $resault = $connection -> prepare("SELECT valeur_m FROM joueur WHERE id = :id");
+        $resault->execute([':id'=>$Userid]);
+        $data = $resault -> fetchAll(PDO::FETCH_NUM);
+        $valeur_m = $data[0][0] ;
+        return ($valeur_m * 12) + self::$P_signature ;
     }
     public function create($name, $role, $email, $nationalite, $valeur_m, $equipe_id, $connection)
     {
+        $this -> nationalite = $nationalite ;
         try {
             $connection -> beginTransaction();
             $opperation = $connection->prepare("INSERT INTO joueur (name,role,email,nationalite,valeur_m,equipe_id)
@@ -26,7 +32,7 @@ class joueur extends Person
                 ":name" => $name,
                 ":role" => $role,
                 ":email" => $email,
-                ":nationalite" => $nationalite,
+                ":nationalite" => $this -> nationalite,
                 ':valeur_m'=> $valeur_m,
                 ':equipe_id' => intval($equipe_id)
             ));
@@ -54,7 +60,6 @@ class joueur extends Person
         $opperation = $connection->prepare("SELECT budget FROM equipe WHERE id = :EquipeB");
         $opperation -> execute([":EquipeB"=>$EquipeB]);
         $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
-        // $budget = $budget[0]['budget'];
         return $budget[0]['budget'];
     }
 }
