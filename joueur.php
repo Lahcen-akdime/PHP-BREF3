@@ -46,7 +46,7 @@ class joueur extends Person
         }
     }
     use search;
-    public function transfert($Joueur, $EquipeA, $EquipeB, $connection)
+    public function gitbudget($Joueur, $EquipeA, $EquipeB, $connection)
     {
         $this->Joueur = $Joueur;
         $this->EquipeA = $EquipeA;

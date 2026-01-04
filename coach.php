@@ -1,9 +1,61 @@
 <?php
+require_once "person.php";
+require_once "Trait/trait.php";
 class coach extends Person {
     private string $style_coach ;
     private string $annee_experience ;
-    public $P_deplacement = 3000;
-     public function getAnnualCost(){
+    public int $P_deplacement = 3000;
+    private PDO $connection ;
+    public $EquipeA ;
+    public $EquipeB ;
+    private $userId ;
+    public function getAnnualCost(){
     // return $this -> salaire * 12 + $this -> P_deplacement  ;
     }
+    use search;
+    public function create($name,$email,$nationalite,$style_c,$annes_ex,$equipe_id,$connection){
+        $this -> name = $name ;
+        $this -> email = $email ;
+        $this -> style_coach = $style_c ;
+        $this -> annee_experience = $annes_ex ;
+        $this -> connection = $connection;
+         try {
+            $connection -> beginTransaction();
+            $opperation = $connection->prepare("INSERT INTO coach (name,email,nationalite,style_c,annes_ex,equipe_id)
+                                      VALUES (:name,:email,:nationalite,:style_c,:annes_ex,:equipe_id)");
+            $opperation -> execute(array(
+                ":name" => $this -> name,
+                ":email" => $this -> email,
+                ":nationalite" => $nationalite,
+                ":style_c" =>$this -> style_coach,
+                ':annes_ex'=>  intval($this -> annee_experience),
+                ':equipe_id' => intval($equipe_id)
+            ));
+            $selectid = $connection -> query("SELECT id FROM coach WHERE name = '$name' AND email = '$email'") ;  
+            $id = $selectid -> fetchAll(PDO::FETCH_ASSOC) ;
+            $opperation = $connection->prepare("INSERT INTO contrat (coach_id,equipe_id,montant)
+                                      VALUES (:coach_id,:equipe_id,:montant)");
+            $opperation -> execute(array(
+                ':coach_id' => $id[0]['id'],
+                ':equipe_id' => intval($equipe_id),
+                ':montant' => 10
+            ));
+            $connection -> commit();
+        } catch (PDOException $e) {
+            echo "error : ". $e -> getMessage() ;
+            $connection -> rollback();
+        }
+    }
+    public function gitbudget($coachid,$EquipeA, $EquipeB, $connection)
+    {
+        $this->userId = $coachid;
+        $this->EquipeA = $EquipeA;
+        $this->EquipeB = $EquipeB;
+        $opperation = $connection->prepare("SELECT budget FROM equipe WHERE id = :EquipeB");
+        $opperation -> execute([":EquipeB"=>$EquipeB]);
+        $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
+        // $budget = $budget[0]['budget'];
+        return $budget[0]['budget'];
+    }
 }
+$coachClass = new coach ();

@@ -1,4 +1,16 @@
 <?php
+require_once "../coach.php";
+require_once "../config.php";
+if($_SERVER['REQUEST_METHOD']=="POST"){
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $nationalite = $_POST['nationalite'];
+    $style_c = $_POST['style_c'];
+    $annes_ex = $_POST['annes_ex'];
+    $equipe_id = $_POST['equipe_id'];
+    $coachClass -> create($name,$email,$nationalite,$style_c,$annes_ex,$equipe_id,$connection);
+    header("location:../admindashboard.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -182,7 +194,7 @@
                 Les champs marqués d'un * sont obligatoires. Les années d'expérience doivent être un nombre positif.
             </div>
 
-            <form id="coachForm">
+            <form id="coachForm" method="POST" action="coachForm.php">
                 <div class="form-group">
                     <label for="name">Nom du Coach *</label>
                     <input type="text" id="name" name="name" placeholder="Ex: Carlo Ancelotti" required>
@@ -219,14 +231,7 @@
 
                 <div class="form-group">
                     <label for="equipe_id">ID de l'Équipe *</label>
-                    <select id="equipe_id" name="equipe_id" required>
-                        <option value="">-- Sélectionner une équipe --</option>
-                        <option value="1">Équipe 1</option>
-                        <option value="2">Équipe 2</option>
-                        <option value="3">Équipe 3</option>
-                        <option value="4">Équipe 4</option>
-                        <option value="5">Équipe 5</option>
-                    </select>
+                    <input id="equipe_id" name="equipe_id" required>
                     <div class="error" id="equipe_idError"></div>
                 </div>
 
@@ -241,85 +246,11 @@
     <script>
         const form = document.getElementById('coachForm');
         const successMsg = document.getElementById('successMsg');
-
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Clear previous errors
-            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
-            successMsg.style.display = 'none';
-
-            // Validate form
-            let isValid = true;
-            const formData = new FormData(form);
-
-            // Validation rules
-            const name = formData.get('name').trim();
-            if (name.length < 2) {
-                showError('nameError', 'Le nom doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const email = formData.get('email').trim();
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showError('emailError', 'Email invalide');
-                isValid = false;
-            }
-
-            const nationalite = formData.get('nationalite').trim();
-            if (nationalite.length < 2) {
-                showError('nationaliteError', 'La nationalité doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const style_c = formData.get('style_c').trim();
-            if (style_c.length < 2) {
-                showError('style_cError', 'Le style de coaching doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-
-            const annes_ex = formData.get('annes_ex');
-            if (isNaN(annes_ex) || annes_ex < 0) {
-                showError('annes_exError', 'Les années d\'expérience doivent être un nombre positif');
-                isValid = false;
-            }
-
-            const equipe_id = formData.get('equipe_id');
-            if (!equipe_id) {
-                showError('equipe_idError', 'Sélectionnez une équipe');
-                isValid = false;
-            }
-
-            if (isValid) {
-                const coachData = {
-                    name: name,
-                    email: email,
-                    nationalite: nationalite,
-                    style_c: style_c,
-                    annes_ex: parseInt(annes_ex),
-                    equipe_id: parseInt(equipe_id)
-                };
-
-                console.log('[v0] Données du coach prêtes pour insertion:', coachData);
-
                 // Show success message
                 successMsg.style.display = 'block';
-                form.reset();
-
-                // Here you would normally send the data to your backend
-                // fetch('/api/coachs/add', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(coachData)
-                // })
             }
-        });
-
-        function showError(elementId, message) {
-            const errorEl = document.getElementById(elementId);
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
+        );
     </script>
 </body>
 </html>

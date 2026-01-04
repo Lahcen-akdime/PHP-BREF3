@@ -1,20 +1,29 @@
 <?php 
 require_once "../equipe.php" ;
 require_once "../config.php" ;
-require_once "../joueur.php" ;
 require_once "../coach.php" ;
+require_once "../FinancialEngine.php" ;
+require_once "../transfert.php" ;
 if($_SERVER['REQUEST_METHOD']=="POST"){
-    // if (condition) {
-    //     # code...
-    // }
-    $joueur_name = $_POST['joueur_name'];
-    $equipe_a=$_POST['equipe_a'];
-    $equipe_b=$_POST['equipe_b'];
-    $checkJoueur = $joueurClass -> search("joueur",$joueur_name,$connection);
-    $checkEquipeA = $teamClass -> search("equipe",$equipe_a,$connection);
-    $checkEquipeB = $teamClass -> search("equipe",$equipe_b,$connection);
-    if($checkJoueur && $checkEquipeA && $checkEquipeB){
-
+    $checkCoach = $coachClass -> search("coach",$_POST['coach_id'],$connection);
+    // $coute ?
+    $checkEquipeA = $teamClass -> search("equipe",$_POST['equipe_a'],$connection);
+    $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
+    if($checkCoach && $checkEquipeA && $checkEquipeB){
+        $budget = $coachClass -> gitbudget($checkCoach[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
+        $resault = $finalClass -> checkSolvabilité($budget,10);
+        if($resault == false){
+            $state = "pendeng";
+            $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
+        }
+        else{
+            $state = "Completed";
+            $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
+            $transfertClass -> FinalCoachOperation($budget,$resault);
+        }
+        echo $budget ;
+        echo $resault ;
+        // header("location:../admindashboard.php");
     }
 }
 ?>
@@ -178,11 +187,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             Transfer added successfully !
         </div>
 
-        <form id="transferForm" method="POST" action="transfertForm.php">
+        <form id="transferForm" method="POST" action="transfertCoachForm.php">
              <div class="form-group">
-                <label for="coach_name ">Coach Name *</label>
-                <input type="text" id ="coach_name" name="coach_name" placeholder="Enter coach name " required>
-                <div class="error" id="coach_id-error">Please enter a valid coach name</div>
+                <label for="coach_name ">Coach Id *</label>
+                <input type="number" id ="coach_id" name="coach_id" placeholder="Enter coach id " required>
+                <div class="error" id="coach_id-error">Please enter a valid coach id</div>
             </div>
 
 
