@@ -1,3 +1,8 @@
+<?php
+require_once "joinClass.php" ;
+$id = $_GET['id'] ;
+$allplayers = $joinClass -> allTeamPlayers($id) ;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -135,55 +140,17 @@
             <h1>Players Gallery</h1>
             <p>View all registered players in the team</p>
         </div>
-
         <div class="players-grid">
-            <!-- Player 1 - CHANGE: Modify the number in player-icon, name, email, and role -->
-            <div class="player-card">
-                <div class="player-icon">1</div>
-                <div class="player-name">Mohamed Ali</div>
-                <div class="player-email">mohamed.ali@team.com</div>
-                <div class="player-role">Striker</div>
-            </div>
-
-            <!-- Player 2 -->
-            <div class="player-card">
-                <div class="player-icon">2</div>
-                <div class="player-name">Ahmed Hassan</div>
-                <div class="player-email">ahmed.hassan@team.com</div>
-                <div class="player-role">Midfielder</div>
-            </div>
-
-            <!-- Player 3 -->
-            <div class="player-card">
-                <div class="player-icon">3</div>
-                <div class="player-name">Sara Johnson</div>
-                <div class="player-email">sara.johnson@team.com</div>
-                <div class="player-role">Defender</div>
-            </div>
-
-            <!-- Player 4 -->
-            <div class="player-card">
-                <div class="player-icon">4</div>
-                <div class="player-name">Carlos Rodriguez</div>
-                <div class="player-email">carlos.rodriguez@team.com</div>
-                <div class="player-role">Goalkeeper</div>
-            </div>
-
-            <!-- Player 5 -->
-            <div class="player-card">
-                <div class="player-icon">5</div>
-                <div class="player-name">Emma Thompson</div>
-                <div class="player-email">emma.thompson@team.com</div>
-                <div class="player-role">Midfielder</div>
-            </div>
-
-            <!-- Player 6 -->
-            <div class="player-card">
-                <div class="player-icon">6</div>
-                <div class="player-name">John Smith</div>
-                <div class="player-email">john.smith@team.com</div>
-                <div class="player-role">Defender</div>
-            </div>
+            <?php 
+            $number = 1;
+            foreach ($allplayers as $key) {?>
+                <div class="player-card">
+                    <div class="player-icon"><?=$number++?></div>
+                    <div class="player-name"><?= $key['name']?></div>
+                    <div class="player-email"><?=$key['email']?></div>
+                    <div class="player-role"><?=$key['role']?></div>
+                </div>
+            <?php }?>
         </div>
     </div>
 </body>

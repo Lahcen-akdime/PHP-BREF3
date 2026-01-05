@@ -279,6 +279,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     </div>
 
     <script>
+        // fetch("http://localhost/phpmyadmin/index.php?route=/sql&db=apex&table=joueur&pos=0")
+        // .then(json => console.log(json));
+
+        
         // function handleLogin(event) {
         //     event.preventDefault();
         //     const role = document.getElementById('role').value;

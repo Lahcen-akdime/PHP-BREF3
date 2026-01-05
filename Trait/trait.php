@@ -6,10 +6,11 @@ trait crud {
     }
      public function update($a , $c){
      }
-     public function delete($teadmId,$tableName,$connection){
-        $connection -> query("DELETE FROM $tableName WHERE id = $teadmId");
+     public function delete($id,$tableName,$connection){
+        $connection -> query("DELETE FROM $tableName WHERE id = $id");
         header("location:admindashboard.php");
      }
+     
 }
 trait search {
     public function search($tableName,$id,$connection){

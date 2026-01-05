@@ -5,7 +5,7 @@ class transfert
     private int  $coach_id;
     private int $equipe_a;
     private int  $equipe_b;
-    private string $state;
+    private readonly string $state;
     private PDO $connection;
     public function Playerinsertion($joueur_id, $equipe_a, $equipe_b, $state, $connection)
     {
@@ -54,9 +54,7 @@ class transfert
             $operation->execute(array(
                 ':joueur_id' => $this->joueur_id,
                 ':equipe_id' => $this->equipe_b,
-
                 ':montant' => $resault,
-
             ));
             $this->connection->commit();
         } catch (PDOException $e) {

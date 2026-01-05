@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once "equipe.php";
 if($_SERVER['REQUEST_METHOD']=="POST"){
  $newbudget = $_POST['newBudget'];

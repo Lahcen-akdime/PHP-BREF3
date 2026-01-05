@@ -5,7 +5,7 @@ require_once "FinancialEngine.php";
 require_once "Trait/trait.php";
 class joueur extends Person
 {
-    private static $P_signature = 5;
+    private static int $P_signature = 1000000;
     private string $role;
     private int $ValeurMarcher;
     private int $contratid;
@@ -19,7 +19,7 @@ class joueur extends Person
         $resault->execute([':id'=>$Userid]);
         $data = $resault -> fetchAll(PDO::FETCH_NUM);
         $valeur_m = $data[0][0] ;
-        return ($valeur_m * 12) + self::$P_signature ;
+         return ($valeur_m * 5) + self::$P_signature ;
     }
     public function create($name, $role, $email, $nationalite, $valeur_m, $equipe_id, $connection)
     {

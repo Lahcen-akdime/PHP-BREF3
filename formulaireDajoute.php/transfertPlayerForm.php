@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
     if($checkJoueur && $checkEquipeA && $checkEquipeB){
         $budget = $joueurClass -> gitbudget($checkJoueur[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
-        $resault = $finalClass -> checkSolvabilité($budget,$coachClass -> getAnnualCost($checkCoach[0],$connection));
+        $resault = $finalClass -> checkSolvabilité($budget,$joueurClass -> getAnnualCost($checkJoueur[0],$connection));
         if($resault == false){
             $state = "pendeng";
             $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
