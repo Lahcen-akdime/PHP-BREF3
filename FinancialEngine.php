@@ -4,18 +4,16 @@ final class FinancialEngine {
     private float $Solvabilite ;
     static private float $transfertTaxe = 0.05 ;
     private float $total ;
-    public function  checkSolvabilité($budget,$transfertMontant){
-         $this -> commision = $transfertMontant / 2 ;
-        $this -> total = (($transfertMontant + $this->commision) * (self::$transfertTaxe));
+    public function  checkSolvabilité($budget,$couteJoueur){
+         $this -> commision = $couteJoueur / 2 ;
+        $this -> total = (($couteJoueur + $this->commision) * (self::$transfertTaxe));
         $this -> Solvabilite = $budget - ($this->total);
         if($this -> Solvabilite > 0){
             return $this->total ;
         }
         else {
             return false ;
-        }
-    }
-}
+        }}}
 $finalClass = new FinancialEngine();
 
 

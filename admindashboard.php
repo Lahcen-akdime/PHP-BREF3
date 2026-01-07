@@ -38,7 +38,7 @@ $allCoaches = $coachClass->read("coach", $connection);
                 </select>
                 <a href="formulaireDajoute.php/joueurForm.php"><button class="btn-new">+ Ajouter un joueur</button></a>
                 <a href="formulaireDajoute.php/coachForm.php"><button class="btn-new">+ Ajouter un coach</button></a>
-                <input type="text" id="roster-search" placeholder="Search by name or email..." style="padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 212, 255, 0.3); color: #e0e0e0; border-radius: 6px; font-size: 13px; flex: 1; min-width: 200px; transition: all 0.2s ease;" />
+                <input type="text" name="player-searched" id="roster-search" placeholder="Search by name or email..." style="padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 212, 255, 0.3); color: #e0e0e0; border-radius: 6px; font-size: 13px; flex: 1; min-width: 200px; transition: all 0.2s ease;" />
             </div>
         </div>
 
@@ -74,7 +74,7 @@ $allCoaches = $coachClass->read("coach", $connection);
                         <th>Joueur Equipe</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="readSpace">
                     <?php
                     foreach ($allplayers as $key) { ?>
                         <tr>
@@ -92,8 +92,8 @@ $allCoaches = $coachClass->read("coach", $connection);
                             </td>
                             <td><?= $joinClass->equipename("joueur", $key['id']) ?></td>
                         </tr>
+                        <?php } ?>
                 </tbody>
-            <?php } ?>
             <thead>
                 <tr>
                     <th>Name</th>
@@ -106,7 +106,7 @@ $allCoaches = $coachClass->read("coach", $connection);
                     <th>Coach Equipe</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="coaches">
                 <?php
                 foreach ($allCoaches as $key) { ?>
                     <tr>
@@ -492,11 +492,58 @@ $allCoaches = $coachClass->read("coach", $connection);
     //     console.log(select.value);
     // })
     let search = document.getElementById("roster-search");
-    // let readSpace = document.getElementById("readSpace");
-    search.addEventListener("change", (e) => {
-        console.log(search.value);
+    let playersSpace = document.getElementById("readSpace");
+    let coachesSpace = document.getElementById("coaches");
+    let array = [];
+    search.addEventListener("input", async (e) => {
+        coachesSpace.innerHTML=``;
+        playersSpace.innerHTML=``;
+        let resault = await fetchIt(search.value);
+        resault.forEach(element => {
+            array.push(element);
+            console.log(element);
+        });
+        
+        array.forEach(element=>{
+            if(element.	style_c == undefined){
+            playersSpace.innerHTML+=`
+            <tr>
+                                <td>${element.name}</td>
+                                <td>Player</td>
+                                <td>${element.role}</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>${element.valeur_m}</td>
+                                <td>${element.coute}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action">Edit</button>
+                                        <a href="delete.php?id=${element.id}&table=joueur" class="btn-action btn-delete">Delete</a>
+                                    </div>
+                                </td>
+                        <td>${element.equipeName}</td>
+                            </tr>
+            `;
+                }
+                else{
+                   coachesSpace.innerHTML+=`<tr>
+                        <td>${element.name}</td>
+                        <td>Coach</td>
+                        <td>${element.style_c}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>${element.annes_ex}</td>
+                        <td>${element.coute}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action">Edit</button>
+                                <a href="delete.php?id=<?= $key['id'] ?>&table=coach"></a><button class="btn-action btn-delete">Delete</button>
+                            </div>
+                        </td>
+                        <td>${element.equipeName}</td>
+                    </tr> `
+                }
+        })
+        array =[];
     })
 </script>
 </body>
-
 </html>

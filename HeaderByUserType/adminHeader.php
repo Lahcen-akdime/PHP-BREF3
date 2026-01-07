@@ -401,6 +401,7 @@
             }
         }
     </style>
+    <script src="./jsonData/getData.js" defer></script>
 </head>
 
 <body>

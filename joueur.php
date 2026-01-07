@@ -2,7 +2,6 @@
 include_once "contrat.php";
 include_once "person.php";
 require_once "FinancialEngine.php";
-require_once "Trait/trait.php";
 class joueur extends Person
 {
     private static int $P_signature = 1000000;
@@ -12,7 +11,6 @@ class joueur extends Person
     private $Joueur;
     private $EquipeA;
     private $EquipeB;
-    use crud;
     public function getAnnualCost($Userid,$connection)
     {
         $resault = $connection -> prepare("SELECT valeur_m FROM joueur WHERE id = :id");
