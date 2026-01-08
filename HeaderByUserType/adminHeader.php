@@ -402,6 +402,7 @@
         }
     </style>
     <script src="./jsonData/getData.js" defer></script>
+    <script src="./jsonData/filterData.js" defer></script>
 </head>
 
 <body>

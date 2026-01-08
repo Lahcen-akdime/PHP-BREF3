@@ -1,6 +1,9 @@
 <?php
-require_once "person.php";
-require_once "Trait/trait.php";
+namespace APEX\classes;
+use APEX\classes\Person;
+use APEX\Trait\search;
+use APEX\Trait\crud;
+use PDO ;
 class coach extends Person {
     private string $style_coach ;
     private string $annee_experience ;
@@ -49,12 +52,12 @@ class coach extends Person {
                 ':montant' => 10
             ));
             $connection -> commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo "error : ". $e -> getMessage() ;
             $connection -> rollback();
         }
     }
-    public function gitbudget($coachid,$EquipeA, $EquipeB, $connection)
+    public function stocker_et_gitbudget($coachid,$EquipeA, $EquipeB, $connection)
     {
         $this->userId = $coachid;
         $this->EquipeA = $EquipeA;
@@ -64,6 +67,10 @@ class coach extends Person {
         $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
         // $budget = $budget[0]['budget'];
         return $budget[0]['budget'];
+    }
+     public function updateCoachTeam($connection,$equipe_b,$coach_id){
+         $connection->prepare("Update joueur SET equipe_id = :equipe_b
+                              WHERE id = :id")->execute([':equipe_b' => $equipe_b, ':id' => $coach_id]);
     }
 }
 $coachClass = new coach ();

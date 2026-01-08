@@ -1,12 +1,32 @@
 <?php
+namespace APEX\classes;
+use APEX\classes\contract;
+use APEX\classes\joueur;
+use APEX\classes\equipe;
+use APEX\classes\coach;
+use APEX\Trait\search;
+use APEX\Trait\crud;
+use PDO ;
+
 class transfert
 {
     private int  $joueur_id;
     private int  $coach_id;
     private int $equipe_a;
     private int  $equipe_b;
+    private $joueurClass ;
+    private $coachClass ;
+    private $contratClass ;
+    private $teamClass ;
     private readonly string $state;
     private PDO $connection;
+    public function __construct($joueurClass,$coachClass,$contratClass,$teamClass)
+    {
+        $this -> joueurClass = $joueurClass ;
+        $this -> coachClass = $coachClass ;
+        $this -> contratClass = $contratClass ;
+        $this -> teamClass = $teamClass ;
+    }
     public function Playerinsertion($joueur_id, $equipe_a, $equipe_b, $state, $connection)
     {
         $this->joueur_id = $joueur_id;
@@ -23,6 +43,8 @@ class transfert
             ':state' =>  $this->state
         ));
     }
+    use crud ;
+    use search ;
      public function CoachInsertion($coach_id, $equipe_a, $equipe_b, $state, $connection)
     {
         $this->coach_id = $coach_id;
@@ -43,49 +65,39 @@ class transfert
     {
         try {
             $this->connection->beginTransaction();
-            $operation = $this->connection->prepare("Update joueur SET equipe_id = :equipe_b
-                                                    WHERE id = :id")->execute([':equipe_b' => $this->equipe_b, ':id' => $this->joueur_id]);
+            // update the team of player -> to the new team
+            $this -> joueurClass -> updateJoueurTeam($this -> connection,$this -> equipe_b,$this -> joueur_id);
+            // calculation of the new budget resault
             $newBudget = $budget - $resault;
-            $operation = $this->connection->prepare("Update equipe SET budget = $newBudget
-                                                   WHERE id = :id");
-            $operation->execute(['id' => $this->equipe_b]);
-            $operation = $this->connection->prepare("INSERT INTO contrat(joueur_id,equipe_id,montant)
-             VALUES(:joueur_id,:equipe_id,:montant)");
-            $operation->execute(array(
-                ':joueur_id' => $this->joueur_id,
-                ':equipe_id' => $this->equipe_b,
-                ':montant' => $resault,
-            ));
+            // update the team budget
+            $this -> teamClass -> updatebudget($newBudget, $this->equipe_b);
+            // insert to contrat 
+            $this -> contratClass -> create($this -> connection,$this->joueur_id,$this->equipe_b,$resault);
             $this->connection->commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo "Error : " . $e->getMessage();
             $this->connection->rollback();
         }
     }
     public function FinalCoachoperation($budget, $resault)
     {
-
         try {
+            // start the transaction
             $this->connection->beginTransaction();
-            $operation = $this->connection->prepare("Update coach SET equipe_id = :equipe_b
-                                                    WHERE id = :id")->execute([':equipe_b' => $this->equipe_b, ':id' => $this->coach_id]);
+            // update the team of coach -> to the new team
+            $this -> coachClass -> updateCoachTeam($this -> connection,$this -> equipe_b,$this -> coach_id);
+            // calculation of the new budget resault           
             $newBudget = $budget - $resault;
-            $operation = $this->connection->prepare("Update equipe SET budget = $newBudget
-                                                   WHERE id = :id");
-            $operation->execute(['id' => $this->equipe_b]);
-            $operation = $this->connection->prepare("INSERT INTO contrat(coach_id,equipe_id,montant)
-             VALUES(:coach_id,:equipe_id,:montant)");
-            $operation->execute(array(
-                ':coach_id' => $this->coach_id,
-                ':equipe_id' => $this->equipe_b,
-                ':montant' => $resault,
-
-            ));
+            // update the team budget
+            $this -> teamClass -> updatebudget($newBudget, $this->equipe_b);
+            // insert to contrat 
+            $this -> contratClass -> create($this -> connection,$this->coach_id,$this->equipe_b,$resault);
+            // the end of transaction
             $this->connection->commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo "Error : " . $e->getMessage();
             $this->connection->rollback();
         }
     }
 }
-$transfertClass = new transfert();
+$transfertClass = new transfert($joueurClass,$coachClass,$contratClass,$teamClass);

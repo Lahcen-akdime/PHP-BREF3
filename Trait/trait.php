@@ -1,4 +1,6 @@
 <?php
+namespace APEX\Trait;
+use PDO ;
 trait crud {
     public function read($name,$connection){
         $operation = $connection -> query("SELECT * FROM $name");

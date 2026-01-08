@@ -1,5 +1,8 @@
 <?php
-require_once "config.php";
+namespace APEX\classes;
+use  APEX\classes\dataBase ;
+use PDO ;
+
 class join{
     public PDO $connection ;
     public function __construct($connection) {

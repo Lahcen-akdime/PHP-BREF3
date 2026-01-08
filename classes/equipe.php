@@ -1,11 +1,12 @@
 <?php
-require_once "interface.php";
-require_once "Trait/trait.php";
-require_once "config.php";
+namespace APEX\classes;
+use APEX\Trait\crud;
+use APEX\Trait\search;
+use APEX\classes\dataBase;
+// require_once "config.php";
 /**
  *   @method read(): void
  */
-
 class equipe
 {
     public $connection;
@@ -26,9 +27,15 @@ class equipe
     }
     public function updatebudget($newbudget, $eqipeID)
     {
-        $operation = $this->connection->query("Update equipe SET budget = $newbudget WHERE id = $eqipeID");
+        $this->connection->query("Update equipe SET budget = $newbudget WHERE id = $eqipeID");
     }
         use search ;
+    public function getSumBudget(){
+        $operation = $this -> connection  -> prepare("SELECT SUM(budget) as sum FROM equipe") ;
+         $operation -> execute();
+        $data = $operation -> fetchAll(\PDO::FETCH_NUM);
+        return $data[0][0];
+    }
         
 }
 $teamClass = new equipe($connection);

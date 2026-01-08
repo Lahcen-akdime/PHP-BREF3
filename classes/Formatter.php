@@ -1,4 +1,5 @@
 <?php
+namespace APEX\classes;
 class Formatter {
     static public function currency($nombre){
     $op1 = $nombre * 0.01;

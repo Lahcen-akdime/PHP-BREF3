@@ -1,7 +1,12 @@
 <?php
-include_once "contrat.php";
-include_once "person.php";
-require_once "FinancialEngine.php";
+namespace APEX\classes;
+use APEX\classes\FinancialEngine;
+use APEX\classes\dataBase;
+use APEX\classes\person;
+use APEX\classes\contract;
+use APEX\Trait\search;
+use PDO ;
+
 class joueur extends Person
 {
     private static int $P_signature = 1000000;
@@ -44,13 +49,13 @@ class joueur extends Person
                 ':montant' => 10
             ));
             $connection -> commit();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo "error : ". $e -> getMessage() ;
             $connection -> rollback();
         }
     }
     use search;
-    public function gitbudget($Joueur, $EquipeA, $EquipeB, $connection)
+    public function stocker_et_gitbudget($Joueur, $EquipeA, $EquipeB, $connection)
     {
         $this->Joueur = $Joueur;
         $this->EquipeA = $EquipeA;
@@ -59,6 +64,10 @@ class joueur extends Person
         $opperation -> execute([":EquipeB"=>$EquipeB]);
         $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
         return $budget[0]['budget'];
+    }
+    public function updateJoueurTeam($connection,$equipe_b,$joueur_id){
+         $operation = $connection->prepare("Update joueur SET equipe_id = :equipe_b
+                                                    WHERE id = :id")->execute([':equipe_b' => $equipe_b, ':id' => $joueur_id]);
     }
 }
 $joueurClass = new joueur();

@@ -1,10 +1,14 @@
 <?php
-require_once "config.php";
-require_once "equipe.php";
-require_once "joueur.php";
-require_once "coach.php";
-require_once "Formatter.php";
-require_once "joinClass.php";
+use APEX\classes\transfert;
+use APEX\classes\Formatter;
+use APEX\classes\database;
+use APEX\classes\contract;
+use APEX\classes\equipe;
+use APEX\classes\joueur;
+use APEX\classes\coach;
+use APEX\classes\join;
+require_once "..\AutoLoading\autoloading.php";
+
 if (!$_SESSION['user'] == "admin") {
     header("location:logout.php");
 } else {
@@ -12,6 +16,8 @@ if (!$_SESSION['user'] == "admin") {
 }
 $allplayers = $joueurClass->read("joueur", $connection);
 $allCoaches = $coachClass->read("coach", $connection);
+$allcontrats = $contratClass->read("contrat",$connection);
+$allTransferts = $transfertClass -> read("transfert",$connection);
 ?>
 <div class="container">
     <!-- Navigation Tabs -->
@@ -32,9 +38,12 @@ $allCoaches = $coachClass->read("coach", $connection);
             <div style="display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
                 <label for="roster-filter" style="font-size: 13px; color: #888; text-transform: uppercase; font-weight: 600;">Filter by:</label>
                 <select id="roster-filter" style="padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 212, 255, 0.3); color: #e0e0e0; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s ease; min-width: 150px;">
-                    <option value="all">All Members</option>
-                    <option value="player">Players</option>
-                    <option value="coach">Coaches</option>
+                    <option value="all">All TEAMS</option>
+                    <?php
+                    foreach ($GLOBALS['teams'] as $key) {
+                        echo "<option value='$key[name]'>$key[name]</option>";
+                    }
+                    ?>
                 </select>
                 <a href="formulaireDajoute.php/joueurForm.php"><button class="btn-new">+ Ajouter un joueur</button></a>
                 <a href="formulaireDajoute.php/coachForm.php"><button class="btn-new">+ Ajouter un coach</button></a>
@@ -45,19 +54,19 @@ $allCoaches = $coachClass->read("coach", $connection);
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Players</div>
-                <div class="stat-value">47</div>
+                <div class="stat-value"><?= sizeof($allplayers) ?></div>
                 <div class="stat-change">↑ 3 this month</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Active Coaches</div>
-                <div class="stat-value">8</div>
+                <div class="stat-label">Total Coaches</div>
+                <div class="stat-value"><?= sizeof($allCoaches) ?></div>
                 <div class="stat-change">↑ 1 this month</div>
             </div>
-            <div class="stat-card">
+            <!-- <div class="stat-card">
                 <div class="stat-label">New Recruits</div>
                 <div class="stat-value">5</div>
                 <div class="stat-change">Pending verification</div>
-            </div>
+            </div> -->
         </div>
 
         <div class="table-wrapper">
@@ -92,40 +101,40 @@ $allCoaches = $coachClass->read("coach", $connection);
                             </td>
                             <td><?= $joinClass->equipename("joueur", $key['id']) ?></td>
                         </tr>
-                        <?php } ?>
+                    <?php } ?>
                 </tbody>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Style of coaching</th>
-                    <th>Status</th>
-                    <th>annes_ex</th>
-                    <th>Cout</th>
-                    <th>Actions</th>
-                    <th>Coach Equipe</th>
-                </tr>
-            </thead>
-            <tbody id="coaches">
-                <?php
-                foreach ($allCoaches as $key) { ?>
+                <thead>
                     <tr>
-                        <td><?= $key['name'] ?></td>
-                        <td>Coach</td>
-                        <td><?= $key['style_c'] ?></td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td><?= $key['annes_ex'] ?></td>
-                        <td><?= $formatterClass->currency($coachClass->getAnnualCost($key['id'], $connection)) ?></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">Edit</button>
-                                <a href="delete.php?id=<?= $key['id'] ?>&table=coach"></a><button class="btn-action btn-delete">Delete</button>
-                            </div>
-                        </td>
-                        <td><?= $joinClass->equipename("coach", $key['id']) ?></td>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Style of coaching</th>
+                        <th>Status</th>
+                        <th>annes_ex</th>
+                        <th>Cout</th>
+                        <th>Actions</th>
+                        <th>Coach Equipe</th>
                     </tr>
-                <?php } ?>
-            </tbody>
+                </thead>
+                <tbody id="coaches">
+                    <?php
+                    foreach ($allCoaches as $key) { ?>
+                        <tr>
+                            <td><?= $key['name'] ?></td>
+                            <td>Coach</td>
+                            <td><?= $key['style_c'] ?></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td><?= $key['annes_ex'] ?></td>
+                            <td><?= $formatterClass->currency($coachClass->getAnnualCost($key['id'], $connection)) ?></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action">Edit</button>
+                                    <a href="delete.php?id=<?= $key['id'] ?>&table=coach"></a><button class="btn-action btn-delete">Delete</button>
+                                </div>
+                            </td>
+                            <td><?= $joinClass->equipename("coach", $key['id']) ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
             </table>
             <div class="pagination">
                 <div class="pagination-info">Showing 1-5 of 47 members</div>
@@ -139,7 +148,9 @@ $allCoaches = $coachClass->read("coach", $connection);
             </div>
         </div>
     </div>
+<?php 
 
+?>
     <!-- Module 2: Team Management -->
     <div class="module" id="teams">
         <div class="module-header">
@@ -158,7 +169,7 @@ $allCoaches = $coachClass->read("coach", $connection);
             </div>
             <div class="stat-card">
                 <div class="stat-label">Total Budget</div>
-                <div class="stat-value">$12.5M</div>
+                <div class="stat-value"><?= $formatterClass -> currency($teamClass->getSumBudget())?></div>
                 <div class="stat-change">↓ $500K available</div>
             </div>
             <div class="stat-card">
@@ -225,10 +236,10 @@ $allCoaches = $coachClass->read("coach", $connection);
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Contracts</div>
-                <div class="stat-value">47</div>
+                <div class="stat-value"><?= sizeof($allcontrats) ?></div>
                 <div class="stat-change">All verified</div>
             </div>
-            <div class="stat-card">
+            <!-- <div class="stat-card">
                 <div class="stat-label">Expiring Soon</div>
                 <div class="stat-value">8</div>
                 <div class="stat-change">Within 3 months</div>
@@ -237,7 +248,7 @@ $allCoaches = $coachClass->read("coach", $connection);
                 <div class="stat-label">Locked Fields</div>
                 <div class="stat-value">100%</div>
                 <div class="stat-change">Start dates secured</div>
-            </div>
+            </div> -->
         </div>
 
         <div class="table-wrapper">
@@ -245,85 +256,36 @@ $allCoaches = $coachClass->read("coach", $connection);
                 <thead>
                     <tr>
                         <th>Contract ID</th>
-                        <th>Player/Staff</th>
+                        <th>Player</th>
+                        <th>Coach</th>
                         <th>Team</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Montant</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>CNT-2024-001</td>
-                        <td>Marcus Johnson</td>
-                        <td>Elite Warriors</td>
-                        <td>2024-01-15</td>
-                        <td>2025-12-31</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                                <button class="btn-action btn-delete">Revoke</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CNT-2024-002</td>
-                        <td>Sarah Williams</td>
-                        <td>Elite Warriors</td>
-                        <td>2023-06-01</td>
-                        <td>2025-06-01</td>
-                        <td><span class="status-badge status-pending">Expiring</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                                <button class="btn-action btn-delete">Revoke</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CNT-2024-003</td>
-                        <td>David Brown</td>
-                        <td>Phoenix Rising</td>
-                        <td>2024-03-20</td>
-                        <td>2026-03-20</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                                <button class="btn-action btn-delete">Revoke</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CNT-2024-004</td>
-                        <td>Elena Rodriguez</td>
-                        <td>Dragon's Pride</td>
-                        <td>2024-07-10</td>
-                        <td>2025-07-10</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                                <button class="btn-action btn-delete">Revoke</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CNT-2024-005</td>
-                        <td>James Patterson</td>
-                        <td>Phoenix Rising</td>
-                        <td>2023-09-01</td>
-                        <td>2025-09-01</td>
-                        <td><span class="status-badge status-pending">Expiring</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                                <button class="btn-action btn-delete">Revoke</button>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($allcontrats as $key) {?>
+                        <tr>
+                            <td><?= $key['id']?></td>
+                            <td><?= $key['joueur_id']?></td>
+                            <td><?= $key['coach_id']?></td>
+                            <td><?= $joinClass->equipename("contrat", $key['equipe_id']) ?></td>
+                            <td><?= $key['date']?></td>
+                            <td> . . . </td>
+                            <td><?= $key['montant']?></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action">View</button>
+                                    <button class="btn-action btn-delete">Revoke</button>
+                                </div>
+                            </td>
+                        </tr> 
+                    <?php }
+                    ?>
                 </tbody>
             </table>
             <div class="pagination">
@@ -353,7 +315,7 @@ $allCoaches = $coachClass->read("coach", $connection);
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Transfers</div>
-                <div class="stat-value">23</div>
+                <div class="stat-value"><?= sizeof($allTransferts) ?></div>
                 <div class="stat-change">This season</div>
             </div>
             <div class="stat-card">
@@ -373,80 +335,31 @@ $allCoaches = $coachClass->read("coach", $connection);
                 <thead>
                     <tr>
                         <th>Transaction ID</th>
-                        <th>Player</th>
+                        <th>Player id</th>
+                        <th>Coach id</th>
                         <th>From Team</th>
                         <th>To Team</th>
-                        <th>Price Total</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>TXN-001</td>
-                        <td>Marcus Johnson</td>
-                        <td>Phoenix Rising</td>
-                        <td>Elite Warriors</td>
-                        <td>$450,000</td>
-                        <td><span class="status-badge status-active">Completed</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>TXN-002</td>
-                        <td>David Brown</td>
-                        <td>Dragon's Pride</td>
-                        <td>Phoenix Rising</td>
-                        <td>$380,000</td>
-                        <td><span class="status-badge status-active">Completed</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>TXN-003</td>
-                        <td>Elena Rodriguez</td>
-                        <td>Thunder Force</td>
-                        <td>Dragon's Pride</td>
-                        <td>$520,000</td>
-                        <td><span class="status-badge status-active">Completed</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>TXN-004</td>
-                        <td>James Patterson</td>
-                        <td>Inferno Squad</td>
-                        <td>Elite Warriors</td>
-                        <td>$290,000</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>TXN-005</td>
-                        <td>Lisa Anderson</td>
-                        <td>Thunder Force</td>
-                        <td>Phoenix Rising</td>
-                        <td>$410,000</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-action">View</button>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($allTransferts as $key) {?>
+                        <tr>
+                            <td><?= $key['id'] ?></td>
+                            <td><?= $key['joueur_id'] ?></td>
+                            <td><?= $key['coach_id'] ?></td>
+                            <td><?= $key['equipe_a'] ?></td>
+                            <td><?= $key['equipe_b'] ?></td>
+                            <td><span class="status-badge status-active"><?= $key['state']?></span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action">View</button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php }
+                        ?>
                 </tbody>
             </table>
             <div class="pagination">
@@ -486,63 +399,109 @@ $allCoaches = $coachClass->read("coach", $connection);
     function nextPage(module) {
         alert(`Navigate to next page for ${module} module`);
     }
-    // let select = document.getElementById("roster-filter");
-    // let readSpace = document.getElementById("readSpace");
-    // select.addEventListener("change", (e) => {
-    //     console.log(select.value);
-    // })
+
+    // _______________________________________________ SEARCH PARTY _________________________________________________
+
     let search = document.getElementById("roster-search");
     let playersSpace = document.getElementById("readSpace");
     let coachesSpace = document.getElementById("coaches");
     let array = [];
     search.addEventListener("input", async (e) => {
-        coachesSpace.innerHTML=``;
-        playersSpace.innerHTML=``;
+        coachesSpace.innerHTML = ``;
+        playersSpace.innerHTML = ``;
         let resault = await fetchIt(search.value);
         resault.forEach(element => {
             array.push(element);
             console.log(element);
         });
-        
-        array.forEach(element=>{
-            if(element.	style_c == undefined){
-            playersSpace.innerHTML+=`
+        array.forEach(element => {
+            if (element.style_c == undefined) {
+                playersSpace.innerHTML += `
             <tr>
-                                <td>${element.name}</td>
-                                <td>Player</td>
+            <td>${element.name}</td>
+            <td>Player</td>
                                 <td>${element.role}</td>
                                 <td><span class="status-badge status-active">Active</span></td>
                                 <td>${element.valeur_m}</td>
                                 <td>${element.coute}</td>
                                 <td>
-                                    <div class="action-buttons">
-                                        <button class="btn-action">Edit</button>
-                                        <a href="delete.php?id=${element.id}&table=joueur" class="btn-action btn-delete">Delete</a>
-                                    </div>
+                                <div class="action-buttons">
+                                <button class="btn-action">Edit</button>
+                                <a href="delete.php?id=${element.id}&table=joueur" class="btn-action btn-delete">Delete</a>
+                                </div>
                                 </td>
-                        <td>${element.equipeName}</td>
-                            </tr>
-            `;
-                }
-                else{
-                   coachesSpace.innerHTML+=`<tr>
-                        <td>${element.name}</td>
-                        <td>Coach</td>
-                        <td>${element.style_c}</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td>${element.annes_ex}</td>
-                        <td>${element.coute}</td>
-                        <td>
-                            <div class="action-buttons">
+                                <td>${element.equipeName}</td>
+                                </tr>
+                                `;
+            } else {
+                coachesSpace.innerHTML += `<tr>
+                                <td>${element.name}</td>
+                                <td>Coach</td>
+                                <td>${element.style_c}</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>${element.annes_ex}</td>
+                                <td>${element.coute}</td>
+                                <td>
+                                <div class="action-buttons">
                                 <button class="btn-action">Edit</button>
                                 <a href="delete.php?id=<?= $key['id'] ?>&table=coach"></a><button class="btn-action btn-delete">Delete</button>
-                            </div>
-                        </td>
-                        <td>${element.equipeName}</td>
-                    </tr> `
-                }
+                                </div>
+                                </td>
+                                <td>${element.equipeName}</td>
+                                </tr> `
+            }
         })
-        array =[];
+        array = [];
+    })
+    // _______________________________________________ SELECT PARTY ___________________________________________________
+
+    let select = document.getElementById("roster-filter");
+    let readSpace = document.getElementById("readSpace");
+    select.addEventListener("change", async (e) => {
+        coachesSpace.innerHTML = ``;
+        playersSpace.innerHTML = ``;
+        let resault = await filterIt(select.value);
+               resault.forEach(element => {
+            array.push(element);
+        });
+        array.forEach(element => {
+            if (element.style_c == undefined) {
+                playersSpace.innerHTML += `
+            <tr>
+            <td>${element.name}</td>
+            <td>Player</td>
+                                <td>${element.role}</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>${element.valeur_m}</td>
+                                <td>${element.coute}</td>
+                                <td>
+                                <div class="action-buttons">
+                                <button class="btn-action">Edit</button>
+                                <a href="delete.php?id=${element.id}&table=joueur" class="btn-action btn-delete">Delete</a>
+                                </div>
+                                </td>
+                                <td>${element.equipeName}</td>
+                                </tr>
+                                `;
+            } else {
+                coachesSpace.innerHTML += `<tr>
+                                <td>${element.name}</td>
+                                <td>Coach</td>
+                                <td>${element.style_c}</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>${element.annes_ex}</td>
+                                <td>${element.coute}</td>
+                                <td>
+                                <div class="action-buttons">
+                                <button class="btn-action">Edit</button>
+                                <a href="delete.php?id=<?= $key['id'] ?>&table=coach"></a><button class="btn-action btn-delete">Delete</button>
+                                </div>
+                                </td>
+                                <td>${element.equipeName}</td>
+                                </tr> `
+            }
+        })
+        array = [];
     })
 </script>
 </body>
