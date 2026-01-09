@@ -1,5 +1,5 @@
 <?php
-namespace APEX\Trait;
+namespace Traits;
 use PDO ;
 trait crud {
     public function read($name,$connection){

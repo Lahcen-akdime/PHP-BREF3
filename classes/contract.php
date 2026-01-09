@@ -1,6 +1,6 @@
 <?php
-namespace APEX\classes;
-use APEX\Trait\crud;
+namespace Classes;
+use Traits\crud;
 class contract {
    use crud ;
    public function create($connection,$joueur_id,$equipe_b,$resault){
@@ -13,4 +13,3 @@ class contract {
             ));
    }
 }
-$contratClass = new contract();

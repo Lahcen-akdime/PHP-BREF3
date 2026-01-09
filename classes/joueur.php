@@ -1,12 +1,11 @@
 <?php
-namespace APEX\classes;
-use APEX\classes\FinancialEngine;
-use APEX\classes\dataBase;
-use APEX\classes\person;
-use APEX\classes\contract;
-use APEX\Trait\search;
+namespace Classes;
+use Classes\FinancialEngine;
+use Classes\dataBase;
+use Classes\person;
+use Classes\contract;
+use Traits\search;
 use PDO ;
-
 class joueur extends Person
 {
     private static int $P_signature = 1000000;
@@ -66,9 +65,8 @@ class joueur extends Person
         return $budget[0]['budget'];
     }
     public function updateJoueurTeam($connection,$equipe_b,$joueur_id){
-         $operation = $connection->prepare("Update joueur SET equipe_id = :equipe_b
-                                                    WHERE id = :id")->execute([':equipe_b' => $equipe_b, ':id' => $joueur_id]);
+        $connection->prepare("Update joueur SET equipe_id = :equipe_b
+                            WHERE id = :id")->execute([':equipe_b' => $equipe_b, ':id' => $joueur_id]);
     }
 }
-$joueurClass = new joueur();
 // $contrat = {}

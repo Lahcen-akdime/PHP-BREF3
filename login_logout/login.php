@@ -4,17 +4,17 @@ class checkuser{
         if($user == "admin"){
             session_start();
             $_SESSION['user']="admin";
-            header("location: ../Dashboards/admindashboard.php");
+            header("location:../Dashboards/admindashboard.php");
        }
         elseif($user == "journaliste"){
             session_start();
         $_SESSION['user']="journaliste";
-        header("location: ../Dashboards/journalistedashboard.php");
+        header("location:../Dashboards/journalistedashboard.php");
        }
        elseif($user == "visitor"){
             session_start();
         $_SESSION['user']="visitor";
-        header("location: ../Dashboards/visitorDashboard.php");
+        header("location:../Dashboards/visitorDashboard.php");
        }
 
     }
@@ -24,9 +24,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $user = $_POST["role"] ;
    $chekclass -> checkSelect($user) ;
 }
-
-
-
 ?>
 
 <!DOCTYPE html>

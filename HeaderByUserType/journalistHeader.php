@@ -1,3 +1,23 @@
+<?php 
+use Classes\transfert;
+use Classes\Formatter;
+use Classes\database;
+use Classes\contract;
+use Classes\equipe;
+use Classes\joueur;
+use Classes\coach;
+use Classes\join;
+require_once "..\AutoLoading\autoloading.php";
+$connection = database::getconnection();
+$teamClass = new equipe($connection);
+$Allteams = $teamClass->affichage();
+$contratClass = new contract();
+$joueurClass = new joueur();
+$coachClass = new coach ();
+$transfertClass = new transfert($joueurClass,$coachClass,$contratClass,$teamClass);
+$joinClass = new join($connection);
+$formatterClass = new Formatter();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -462,7 +482,7 @@
                     <div style="font-size: 14px; font-weight: 600;">Journalist</div>
                     <div style="font-size: 12px; color: #94a3b8;">Data Expert</div>
                 </div>
-                <a href="logout.php" style="color:aliceblue" class="admin-user">
+                <a href="../login_logout/logout.php" style="color:aliceblue" class="admin-user">
                     <div>Log out</div>
         </a>
             </div>

@@ -1,13 +1,20 @@
 <?php
-require_once "equipe.php";
+require_once "../AutoLoading/autoloading.php";
+use Classes\equipe;
+use Classes\dataBase;
+
+$database = new dataBase();
+$connection = $database -> getconnection() ;
+$teamClass = new equipe($connection);
 if($_SERVER['REQUEST_METHOD']=="POST"){
  $newbudget = $_POST['newBudget'];
  $teamid = $_POST['teamID'];
  $teamClass -> updatebudget($newbudget,$teamid);
-         header("Location:admindashboard.php");
+         header("Location:..//Dashboards/admindashboard.php");
 }
 else {
 $teamid = $_GET['id'];
+$allTeams = $teamClass -> affichage() ;
 }
 ?>
 <!DOCTYPE html>
@@ -213,7 +220,7 @@ $teamid = $_GET['id'];
 
             <div class="form-group">
                 <label for="team">Team Name *</label>
-                <p class="form-title" style="font-size: 2rem;"><?php foreach ($GLOBALS['teams'] as $key) {
+                <p class="form-title" style="font-size: 2rem;"><?php foreach ($allTeams as $key) {
                     if($key['id']==$teamid){
                         echo $key['name'];
                     }
@@ -231,7 +238,7 @@ $teamid = $_GET['id'];
             <div class="form-group">
                 <label for="newBudget">New Budget (in millions) *</label>
                 <input type="number" id="newBudget" name="newBudget"
-                 placeholder="Enter new budget amount" value="<?php foreach ($GLOBALS['teams'] as $key) {
+                 placeholder="Enter new budget amount" value="<?php foreach ($allTeams as $key) {
                     if($key['id']==$teamid){
                         echo $key['budget'];
                     }

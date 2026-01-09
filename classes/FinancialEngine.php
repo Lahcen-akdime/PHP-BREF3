@@ -1,5 +1,5 @@
 <?php
-namespace APEX\classes;
+namespace Classes;
 final class FinancialEngine {
     private float $commision ;
     private float $Solvabilite ;

@@ -1,7 +1,6 @@
 <?php
-namespace APEX\classes;
-use APEX\Trait\crud;
-require_once "Trait/trait.php";
+namespace Classes;
+use Traits\crud;
 abstract class Person {
     protected int $id ;
     protected string $name ;

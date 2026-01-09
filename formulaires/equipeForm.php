@@ -1,6 +1,11 @@
 <?php
-require_once "../equipe.php" ;
-require_once "../config.php" ;
+require_once "..\AutoLoading\autoloading.php";
+use Classes\Formatter;
+use Classes\database;
+use Classes\equipe;
+use Classes\join;
+$database = new dataBase() ;
+$connection = $database->getconnection() ;
 $teamClass = new equipe($connection) ;
 if($_SERVER['REQUEST_METHOD']=="POST"){
     $name = $_POST['name'];

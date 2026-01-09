@@ -1,5 +1,9 @@
 <?php
-require_once "joinClass.php" ;
+require_once "../AutoLoading/autoloading.php";
+use Classes\join ;
+use Classes\dataBase ;
+$connection = database::getconnection();
+$joinClass = new join($connection);
 $id = $_GET['id'] ;
 $allplayers = $joinClass -> allTeamPlayers($id) ;
 ?>

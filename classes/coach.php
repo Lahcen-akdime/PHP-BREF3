@@ -1,8 +1,8 @@
 <?php
-namespace APEX\classes;
-use APEX\classes\Person;
-use APEX\Trait\search;
-use APEX\Trait\crud;
+namespace Classes;
+use Classes\Person;
+use Traits\search;
+use Traits\crud;
 use PDO ;
 class coach extends Person {
     private string $style_coach ;
@@ -73,4 +73,3 @@ class coach extends Person {
                               WHERE id = :id")->execute([':equipe_b' => $equipe_b, ':id' => $coach_id]);
     }
 }
-$coachClass = new coach ();

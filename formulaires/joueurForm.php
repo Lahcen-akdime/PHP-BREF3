@@ -1,6 +1,6 @@
 <?php
-require_once "../joueur.php";
-require_once "../config.php";
+use Classes\joueur;
+require_once "..\AutoLoading\autoloading.php";
 $joueurClass = new joueur();
 if($_SERVER['REQUEST_METHOD']=="POST"){
     $name = $_POST['name'];

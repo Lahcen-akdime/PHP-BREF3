@@ -1,15 +1,18 @@
 <?php
-namespace APEX\classes;
-use APEX\Trait\crud;
-use APEX\Trait\search;
-use APEX\classes\dataBase;
+namespace Classes;
+use Traits\traits;
+use Traits\crud;
+use Traits\search;
+use Classes\dataBase;
+require_once "../AutoLoading/autoloading.php";
 // require_once "config.php";
 /**
  *   @method read(): void
  */
 class equipe
 {
-    public $connection;
+    public array $allteams ;
+    public $connection ;
     public function __construct($connection)
     {
         $this->connection = $connection;
@@ -38,5 +41,3 @@ class equipe
     }
         
 }
-$teamClass = new equipe($connection);
-$GLOBALS['teams'] = $teamClass->affichage();

@@ -1,3 +1,14 @@
+<?php
+use Classes\transfert;
+use Classes\Formatter;
+use Classes\database;
+use Classes\contract;
+use Classes\equipe;
+use Classes\joueur;
+use Classes\coach;
+use Classes\join;
+require_once "..\AutoLoading\autoloading.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -313,7 +324,7 @@
         <div class="header-content">
             <div class="logo">⚽ Sports Management</div>
             <div class="badge">👁️ Visitor - Read Only</div>
-            <a href="logout.php" style="color:aliceblue" class="admin-user">
+            <a href="../login_logout/logout.php" style="color:aliceblue" class="admin-user">
                     <div>Log out</div>
         </a>
         </div>

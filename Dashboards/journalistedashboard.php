@@ -4,8 +4,12 @@ if($_SESSION['user']!="journaliste"){
     header("location:logout.php");
 }
 else{
-    require_once "HeaderByUserType/journalistHeader.php";
+    require_once "../HeaderByUserType/journalistHeader.php";
 }
+$allplayers = $joueurClass->read("joueur", $connection);
+$allCoaches = $coachClass->read("coach", $connection);
+$allcontrats = $contratClass->read("contrat",$connection);
+$allTransferts = $transfertClass -> read("transfert",$connection);
 ?>
         <!-- Tabs -->
         <div class="tabs">

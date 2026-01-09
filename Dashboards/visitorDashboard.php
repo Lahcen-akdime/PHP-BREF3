@@ -4,7 +4,7 @@ if($_SESSION['user']!="visitor"){
     header("location:logout.php");
 }
 else{
-    require_once "HeaderByUserType/visitorHeader.php";
+    require_once "../HeaderByUserType/visitorHeader.php";
 }
 ?>
     <div class="container">

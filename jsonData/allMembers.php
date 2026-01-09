@@ -1,11 +1,23 @@
 <?php
-require_once "../joueur.php";
-require_once "../coach.php";
-require_once "../config.php";
-require_once "../formatter.php";
-require_once "../joinClass.php";
-$Allcoaches = $coachClass -> read("coach",$connection) ;
+require_once "../AutoLoading/autoloading.php";
+use Classes\joueur ;
+use Classes\coach ;
+use Classes\dataBase ;
+use Classes\Formatter ;
+use Classes\join ;
+// require_once "../joueur.php";
+// require_once "../coach.php";
+// require_once "../config.php";
+// require_once "../formatter.php";
+// require_once "../joinClass.php";
+$formatterClass = new Formatter() ;
+$databaseClass = new dataBase() ;
+$connection = $databaseClass -> getconnection() ; 
+$joinClass = new join($connection) ;
+$joueurClass = new joueur() ;
+$coachClass = new coach() ;
 $Alljoueurs = $joueurClass -> read("joueur",$connection);
+$Allcoaches = $coachClass -> read("coach",$connection) ;
 // _____________________ Search __________________________ //
 if(isset($_GET['query'])){
     $query = $_GET['query'] ;
@@ -62,5 +74,4 @@ foreach ($Alljoueurs as $key ) {
         }}}
 echo json_encode($resault);
 }
-
 ?>

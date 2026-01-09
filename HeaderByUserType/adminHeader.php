@@ -1,3 +1,23 @@
+<?php 
+require_once "../AutoLoading/autoloading.php";
+use Classes\transfert;
+use Classes\Formatter;
+use Classes\database;
+use Classes\contract;
+use Classes\equipe;
+use Classes\joueur;
+use Classes\coach;
+use Classes\join;
+$connection = database::getconnection();
+$teamClass = new equipe($connection);
+$Allteams = $teamClass->affichage();
+$contratClass = new contract();
+$joueurClass = new joueur();
+$coachClass = new coach ();
+$transfertClass = new transfert($joueurClass,$coachClass,$contratClass,$teamClass);
+$joinClass = new join($connection);
+$formatterClass = new Formatter();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -401,8 +421,8 @@
             }
         }
     </style>
-    <script src="./jsonData/getData.js" defer></script>
-    <script src="./jsonData/filterData.js" defer></script>
+    <script src="../jsonData/getData.js" defer></script>
+    <script src="../jsonData/filterData.js" defer></script>
 </head>
 
 <body>
@@ -412,7 +432,7 @@
             <div class="admin-user">
                 <div class="admin-badge">A</div>
                 <div>Administrator</div>
-                <a href="logout.php" style="color:aliceblue" class="admin-user">
+                <a href="../login_logout/logout.php" style="color:aliceblue" class="admin-user">
                     <div>Log out</div>
                 </a>
             </div>

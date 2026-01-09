@@ -1,11 +1,11 @@
 <?php
-namespace APEX\classes;
-use APEX\classes\contract;
-use APEX\classes\joueur;
-use APEX\classes\equipe;
-use APEX\classes\coach;
-use APEX\Trait\search;
-use APEX\Trait\crud;
+namespace Classes;
+use Classes\contract;
+use Classes\joueur;
+use Classes\equipe;
+use Classes\coach;
+use Traits\search;
+use Traits\crud;
 use PDO ;
 
 class transfert
@@ -14,7 +14,7 @@ class transfert
     private int  $coach_id;
     private int $equipe_a;
     private int  $equipe_b;
-    private $joueurClass ;
+    private joueur $joueurClass ;
     private $coachClass ;
     private $contratClass ;
     private $teamClass ;
@@ -100,4 +100,3 @@ class transfert
         }
     }
 }
-$transfertClass = new transfert($joueurClass,$coachClass,$contratClass,$teamClass);

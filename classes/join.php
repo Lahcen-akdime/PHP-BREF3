@@ -1,10 +1,8 @@
 <?php
-namespace APEX\classes;
-use  APEX\classes\dataBase ;
+namespace Classes;
 use PDO ;
-
 class join{
-    public PDO $connection ;
+    public $connection ;
     public function __construct($connection) {
         $this-> connection = $connection ;
     }
@@ -21,8 +19,4 @@ $resault -> execute();
 $data = $resault->fetchAll(PDO::FETCH_ASSOC);
 return $data ;
 }
-
-
-
 }
-$joinClass = new join($connection);

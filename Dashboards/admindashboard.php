@@ -1,18 +1,9 @@
 <?php
-use APEX\classes\transfert;
-use APEX\classes\Formatter;
-use APEX\classes\database;
-use APEX\classes\contract;
-use APEX\classes\equipe;
-use APEX\classes\joueur;
-use APEX\classes\coach;
-use APEX\classes\join;
-require_once "..\AutoLoading\autoloading.php";
-
+session_start();
 if (!$_SESSION['user'] == "admin") {
-    header("location:logout.php");
+    header("location:../login_logout/logout.php");
 } else {
-    require_once "HeaderByUserType/adminHeader.php";
+    require_once "../HeaderByUserType/adminHeader.php";
 }
 $allplayers = $joueurClass->read("joueur", $connection);
 $allCoaches = $coachClass->read("coach", $connection);
@@ -40,13 +31,13 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 <select id="roster-filter" style="padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 212, 255, 0.3); color: #e0e0e0; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.2s ease; min-width: 150px;">
                     <option value="all">All TEAMS</option>
                     <?php
-                    foreach ($GLOBALS['teams'] as $key) {
+                    foreach ($Allteams as $key) {
                         echo "<option value='$key[name]'>$key[name]</option>";
                     }
                     ?>
                 </select>
-                <a href="formulaireDajoute.php/joueurForm.php"><button class="btn-new">+ Ajouter un joueur</button></a>
-                <a href="formulaireDajoute.php/coachForm.php"><button class="btn-new">+ Ajouter un coach</button></a>
+                <a href="../formulaires/joueurForm.php"><button class="btn-new">+ Ajouter un joueur</button></a>
+                <a href="../formulaires/coachForm.php"><button class="btn-new">+ Ajouter un coach</button></a>
                 <input type="text" name="player-searched" id="roster-search" placeholder="Search by name or email..." style="padding: 8px 12px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 212, 255, 0.3); color: #e0e0e0; border-radius: 6px; font-size: 13px; flex: 1; min-width: 200px; transition: all 0.2s ease;" />
             </div>
         </div>
@@ -158,7 +149,7 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 <div class="module-icon">🏢</div>
                 Management des Équipes
             </div>
-            <a href="formulaireDajoute.php/equipeForm.php"><button class="btn-new">+ Créer Équipe</button></a>
+            <a href="../formulaires/equipeForm.php"><button class="btn-new">+ Créer Équipe</button></a>
         </div>
 
         <div class="stats-grid">
@@ -193,11 +184,11 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($GLOBALS['teams'] as $key) {
+                    foreach ($Allteams as $key) {
                         echo "<tr>
                                 <td>$key[name]</td>
                                 <td>$key[manager_name]</td>
-                                <td>" . $formatterClass->currency($key['budget']) .  "<a href='budgetedit.php?id=$key[id]'><button class='btn-action'>Modifier</button></a></td>
+                                <td>" . $formatterClass->currency($key['budget']) .  "<a href='../formulaires/budgetedit.php?id=$key[id]'><button class='btn-action'>Modifier</button></a></td>
                                 <td><span class='status-badge status-active'>Active</span></td>
                                 <td>
                                     <div class='action-buttons'>
@@ -230,7 +221,7 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 <div class="module-icon">📋</div>
                 Contrôle Contractuel
             </div>
-            <button class="btn-new">+ Générer Contrat</button>
+            <!-- <button class="btn-new">+ Générer Contrat</button> -->
         </div>
 
         <div class="stats-grid">
@@ -308,8 +299,8 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 <div class="module-icon">💰</div>
                 Exécution des Transactions
             </div>
-            <a href="./formulaireDajoute.php/transfertPlayerForm.php"><button class="btn-new">+ Déclencher a player Transfert</button></a>
-            <a href="./formulaireDajoute.php/transfertCoachForm.php"><button class="btn-new">+ Déclencher a coach Transfert</button></a>
+            <a href="../formulaires/transfertPlayerForm.php"><button class="btn-new">+ Déclencher a player Transfert</button></a>
+            <a href="../formulaires/transfertCoachForm.php"><button class="btn-new">+ Déclencher a coach Transfert</button></a>
         </div>
 
         <div class="stats-grid">
@@ -410,6 +401,7 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
         coachesSpace.innerHTML = ``;
         playersSpace.innerHTML = ``;
         let resault = await fetchIt(search.value);
+        console.log("jsgdhgjh,gsbj,b");
         resault.forEach(element => {
             array.push(element);
             console.log(element);
@@ -461,7 +453,7 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
         coachesSpace.innerHTML = ``;
         playersSpace.innerHTML = ``;
         let resault = await filterIt(select.value);
-               resault.forEach(element => {
+        resault.forEach(element => {
             array.push(element);
         });
         array.forEach(element => {

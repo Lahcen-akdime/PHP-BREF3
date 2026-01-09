@@ -1,25 +1,23 @@
 <?php 
-require_once "../equipe.php" ;
-require_once "../config.php" ;
-require_once "../coach.php" ;
-require_once "../FinancialEngine.php" ;
-require_once "../transfert.php" ;
+use Classes\transfert;
+use Classes\equipe;
+use Classes\joueur;
+require_once "..\AutoLoading\autoloading.php";
 if($_SERVER['REQUEST_METHOD']=="POST"){
-    $checkCoach = $coachClass -> search("coach",$_POST['coach_id'],$connection);
-    // $coute ?
+    $checkJoueur = $joueurClass -> search("joueur",$_POST['joueur_id'],$connection);
     $checkEquipeA = $teamClass -> search("equipe",$_POST['equipe_a'],$connection);
-    $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection);
-    if($checkCoach && $checkEquipeA && $checkEquipeB){
-        $budget = $coachClass -> stocker_et_gitbudget($checkCoach[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
-        $resault = $finalClass -> checkSolvabilité($budget,$coachClass -> getAnnualCost($checkCoach[0],$connection));
+    $checkEquipeB = $teamClass -> search("equipe",$_POST['equipe_b'],$connection); 
+    if($checkJoueur && $checkEquipeA && $checkEquipeB){
+        $budget = $joueurClass -> stocker_et_gitbudget($checkJoueur[0] , $checkEquipeA[0] , $checkEquipeB[0],$connection);
+        $resault = $finalClass -> checkSolvabilité($budget,$joueurClass -> getAnnualCost($checkJoueur[0],$connection));
         if($resault == false){
             $state = "pendeng";
-            $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
+            $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
         }
         else{
             $state = "Completed";
-            $transfertClass -> CoachInsertion($checkCoach[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
-            $transfertClass -> FinalCoachOperation($budget,$resault);
+            $transfertClass -> Playerinsertion($checkJoueur[0],$checkEquipeA[0],$checkEquipeB[0],$state,$connection);
+            $transfertClass -> FinalPlayeroperation($budget,$resault);
         }
         header("location:../admindashboard.php");
     }
@@ -188,11 +186,11 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             Transfer added successfully !
         </div>
 
-        <form id="transferForm" method="POST" action="transfertCoachForm.php">
-             <div class="form-group">
-                <label for="coach_name ">Coach Id *</label>
-                <input type="number" id ="coach_id" name="coach_id" placeholder="Enter coach id " required>
-                <div class="error" id="coach_id-error">Please enter a valid coach id</div>
+        <form id="transferForm" method="POST">
+            <div class="form-group">
+                <label for="joueur_id ">Player id *</label>
+                <input type="text" id ="joueur_id" name="joueur_id" placeholder="Enter player id " required>
+                <div class="error" id="joueur_id-error">Please enter a valid player id</div>
             </div>
 
 
