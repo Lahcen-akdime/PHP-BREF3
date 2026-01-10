@@ -3,25 +3,26 @@ namespace Classes;
 use Classes\Person;
 use Traits\search;
 use Traits\crud;
-use PDO ;
+use Traits\getNameById ;
 class coach extends Person {
     private string $style_coach ;
     private string $annee_experience ;
     static private int $P_deplacement = 30;
     private int $salary ;
-    private PDO $connection ;
+    private \PDO $connection ;
     public $EquipeA ;
     public $EquipeB ;
     private $userId ;
+    use getNameById ;
+    use search;
+    use crud;
     public function getAnnualCost($Userid,$connection){
     $resault = $connection -> prepare("SELECT salary FROM coach WHERE id = :id");
         $resault->execute([':id'=>$Userid]);
-        $data = $resault -> fetchAll(PDO::FETCH_NUM);
+        $data = $resault -> fetchAll(\PDO::FETCH_NUM);
         $salary = $data[0][0] ;
     return ($salary * 12) + SELF::$P_deplacement  ;
     }
-    use crud;
-    use search;
     public function create($name,$email,$nationalite,$style_c,$annes_ex,$salary,$equipe_id,$connection){
         $this -> name = $name ;
         $this -> email = $email ;
@@ -43,7 +44,7 @@ class coach extends Person {
                 ':equipe_id' => intval($equipe_id)
             ));
             $selectid = $connection -> query("SELECT id FROM coach WHERE name = '$name' AND email = '$email'") ;  
-            $id = $selectid -> fetchAll(PDO::FETCH_ASSOC) ;
+            $id = $selectid -> fetchAll(\PDO::FETCH_ASSOC) ;
             $opperation = $connection->prepare("INSERT INTO contrat (coach_id,equipe_id,montant)
                                       VALUES (:coach_id,:equipe_id,:montant)");
             $opperation -> execute(array(
@@ -64,7 +65,7 @@ class coach extends Person {
         $this->EquipeB = $EquipeB;
         $opperation = $connection->prepare("SELECT budget FROM equipe WHERE id = :EquipeB");
         $opperation -> execute([":EquipeB"=>$EquipeB]);
-        $budget = $opperation->fetchAll(PDO::FETCH_ASSOC);
+        $budget = $opperation->fetchAll(\PDO::FETCH_ASSOC);
         // $budget = $budget[0]['budget'];
         return $budget[0]['budget'];
     }

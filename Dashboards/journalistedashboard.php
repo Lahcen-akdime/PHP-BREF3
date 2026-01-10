@@ -49,6 +49,7 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                     <thead>
                         <tr>
                             <th>Player</th>
+                            <th>Coach</th>
                             <th>From → To</th>
                             <th>Transfer Fee</th>
                             <th>Annual Salary</th>
@@ -57,38 +58,18 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Kylian Mbappé</strong></td>
-                            <td>PSG → Real Madrid</td>
-                            <td>€180M</td>
-                            <td class="salary-badge">€25M</td>
-                            <td class="buyback-badge">€250M (3 years)</td>
-                            <td><span class="transfer-badge">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Jude Bellingham</strong></td>
-                            <td>Dortmund → Real Madrid</td>
-                            <td>€103M</td>
-                            <td class="salary-badge">€18M</td>
-                            <td class="buyback-badge">€180M (2 years)</td>
-                            <td><span class="transfer-badge">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Luis Díaz</strong></td>
-                            <td>Porto → Liverpool</td>
-                            <td>€75M</td>
-                            <td class="salary-badge">€12M</td>
-                            <td class="buyback-badge">€120M (4 years)</td>
-                            <td><span class="transfer-badge">Active</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Vinicius Jr</strong></td>
-                            <td>Flamengo → Real Madrid</td>
-                            <td>€45M</td>
-                            <td class="salary-badge">€15M</td>
-                            <td class="buyback-badge">€80M (5 years)</td>
-                            <td><span class="transfer-badge">Active</span></td>
-                        </tr>
+                        <?php foreach ($allTransferts as $key) {?>
+                            <tr>
+                                <td><strong><?= $joueurClass->getName("joueur",$key['joueur_id'],$connection)  ?></strong></td>
+                                <td><strong><?= $coachClass->getName("coach",$key['coach_id'],$connection)  ?></strong></td>
+                                <td><?= $teamClass->getName("equipe",$key['equipe_a'],$connection) ?>
+                                 → <?= $teamClass->getName("equipe",$key['equipe_b'],$connection) ?></td>
+                                <td>€180M</td>
+                                <td class="salary-badge">€25M</td>
+                                <td class="buyback-badge">€250M (3 years)</td>
+                                <td><span class="transfer-badge">Completed</span></td>
+                            </tr>
+                        <?php }?>
                     </tbody>
                 </table>
             </div>

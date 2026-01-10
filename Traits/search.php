@@ -15,3 +15,16 @@ trait search {
 
     }
 }
+trait getNameById{
+    public function getName($tableName,$id,$connection){
+        $resault = $connection -> prepare("SELECT name FROM $tableName WHERE id = :id");
+        $resault->execute([':id'=>$id]);
+        $data = $resault -> fetchAll(\PDO::FETCH_NUM);
+        if($data){
+            return $data[0][0];
+        }
+        else{
+            return "";
+        }
+    }
+}

@@ -128,13 +128,10 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
                 </tbody>
             </table>
             <div class="pagination">
-                <div class="pagination-info">Showing 1-5 of 47 members</div>
+                <div class="pagination-info">Showing 4 of members in page</div>
                 <div class="pagination-controls">
-                    <button class="btn-page" onclick="prevPage('roster')">← Prev</button>
-                    <button class="btn-page active">1</button>
-                    <button class="btn-page">2</button>
-                    <button class="btn-page">3</button>
-                    <button class="btn-page" onclick="nextPage('roster')">Next →</button>
+                    <a href="../Dashboards/admindashboard.php?indice=<?php if($currentPage > 1){ echo $currentPage-- ;} ?>"><button class="btn-page">← Prev</button></a>
+                    <a href="../Dashboards/admindashboard.php?indice=<?= $currentPage+=1 ?>"><button class="btn-page">Next →</button></a>
                 </div>
             </div>
         </div>
@@ -382,15 +379,6 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
         });
     });
 
-    // Pagination functions
-    function prevPage(module) {
-        alert(`Navigate to previous page for ${module} module`);
-    }
-
-    function nextPage(module) {
-        alert(`Navigate to next page for ${module} module`);
-    }
-
     // _______________________________________________ SEARCH PARTY _________________________________________________
 
     let search = document.getElementById("roster-search");
@@ -401,7 +389,6 @@ $allTransferts = $transfertClass -> read("transfert",$connection);
         coachesSpace.innerHTML = ``;
         playersSpace.innerHTML = ``;
         let resault = await fetchIt(search.value);
-        console.log("jsgdhgjh,gsbj,b");
         resault.forEach(element => {
             array.push(element);
             console.log(element);

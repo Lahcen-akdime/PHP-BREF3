@@ -5,6 +5,8 @@ use Classes\dataBase;
 use Classes\person;
 use Classes\contract;
 use Traits\search;
+use Traits\getNameById;
+;
 use PDO ;
 class joueur extends Person
 {
@@ -15,6 +17,10 @@ class joueur extends Person
     private $Joueur;
     private $EquipeA;
     private $EquipeB;
+
+    use search;
+    use getNameById ;
+
     public function getAnnualCost($Userid,$connection)
     {
         $resault = $connection -> prepare("SELECT valeur_m FROM joueur WHERE id = :id");
@@ -53,7 +59,6 @@ class joueur extends Person
             $connection -> rollback();
         }
     }
-    use search;
     public function stocker_et_gitbudget($Joueur, $EquipeA, $EquipeB, $connection)
     {
         $this->Joueur = $Joueur;

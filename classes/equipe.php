@@ -3,6 +3,7 @@ namespace Classes;
 use Traits\traits;
 use Traits\crud;
 use Traits\search;
+use Traits\getNameById;
 use Classes\dataBase;
 require_once "../AutoLoading/autoloading.php";
 // require_once "config.php";
@@ -17,7 +18,9 @@ class equipe
     {
         $this->connection = $connection;
     }
+    use search ;
     use crud;
+    use getNameById ;
     public function create($name, $managername, $budget, $connection)
     {
         $operation = $connection->prepare("INSERT INTO equipe(name,manager_name,budget)
@@ -32,12 +35,12 @@ class equipe
     {
         $this->connection->query("Update equipe SET budget = $newbudget WHERE id = $eqipeID");
     }
-        use search ;
     public function getSumBudget(){
         $operation = $this -> connection  -> prepare("SELECT SUM(budget) as sum FROM equipe") ;
          $operation -> execute();
         $data = $operation -> fetchAll(\PDO::FETCH_NUM);
         return $data[0][0];
     }
+
         
 }
